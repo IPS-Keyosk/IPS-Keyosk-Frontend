@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 간편 메뉴</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu-simple.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="menu-simple-screen">
+                <header class="menu-header">
+                    <h1 class="simple-title">메뉴</h1>
+                    <p class="simple-subtitle">원하시는 메뉴를 선택해주세요</p>
+                </header>
+                
+                <main class="menu-content">
+                    <h2 class="section-title">음료</h2>
+                    <div class="menu-simple-grid">
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="아메리카노">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>아메리카노</h3>
+                                <p class="price">4,500원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="카페라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>카페라떼</h3>
+                                <p class="price">5,000원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="바닐라라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>바닐라라떼</h3>
+                                <p class="price">5,500원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="아이스티">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>아이스티</h3>
+                                <p class="price">4,800원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="section-title">디저트</h2>
+                    <div class="menu-simple-grid">
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="크로플">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>크로플</h3>
+                                <p class="price">5,500원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="티라미수">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>티라미수</h3>
+                                <p class="price">6,500원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="치즈케이크">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>치즈케이크</h3>
+                                <p class="price">6,000원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                        <div class="menu-simple-item">
+                            <div class="menu-item-image">
+                                <img src="https://via.placeholder.com/150" alt="마카롱">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3>마카롱</h3>
+                                <p class="price">2,500원</p>
+                                <button class="add-to-cart-btn">담기</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                
+                <footer class="menu-footer">
+                    <a href="menu-new.html" class="normal-mode-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        일반 모드
+                    </a>
+                    <div class="cart-preview">
+                        <div class="cart-info">
+                            <span class="cart-count">0</span>개 항목
+                        </div>
+                        <div class="cart-total">
+                            총액: <span class="total-price">0</span>원
+                        </div>
+                    </div>
+                    <button class="checkout-btn" disabled>결제하기</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 장바구니 기능
+        let cart = [];
+        const cartCountElement = document.querySelector('.cart-count');
+        const totalPriceElement = document.querySelector('.total-price');
+        const checkoutButton = document.querySelector('.checkout-btn');
+        
+        // 메뉴 항목에 클릭 이벤트 추가
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const menuItem = this.closest('.menu-simple-item');
+                const itemName = menuItem.querySelector('h3').textContent;
+                const itemPrice = parseInt(menuItem.querySelector('.price').textContent.replace(/[^0-9]/g, ''));
+                
+                // 장바구니에 항목 추가
+                cart.push({
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: 1
+                });
+                
+                // 장바구니 UI 업데이트
+                updateCartUI();
+                
+                // 추가 애니메이션 및 피드백
+                menuItem.classList.add('menu-item-added');
+                setTimeout(() => {
+                    menuItem.classList.remove('menu-item-added');
+                }, 500);
+                
+                // 버튼 텍스트 변경으로 피드백 제공
+                const originalText = button.textContent;
+                button.textContent = '추가됨!';
+                button.classList.add('added');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('added');
+                }, 1000);
+            });
+        });
+        
+        // 장바구니 UI 업데이트 함수
+        function updateCartUI() {
+            // 장바구니 항목 수 업데이트
+            cartCountElement.textContent = cart.length;
+            
+            // 총액 계산
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            totalPriceElement.textContent = totalPrice.toLocaleString();
+            
+            // 결제 버튼 활성화/비활성화
+            checkoutButton.disabled = cart.length === 0;
+        }
+        
+        // 결제 버튼 클릭 이벤트
+        checkoutButton.addEventListener('click', function() {
+            // 장바구니 데이터를 로컬 스토리지에 저장
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // 결제 페이지로 이동
+            window.location.href = '{{ url_for("checkout") }}';
+        });
+    </script>
+</body>
+</html>

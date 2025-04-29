@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 회원가입</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="signup-screen">
+                <h1 class="title">회원가입</h1>
+                <div class="form-container">
+                    <form id="signup-form">
+                        <div class="input-group">
+                            <label for="name">이름</label>
+                            <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="phone">전화번호</label>
+                            <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" required>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- 한글 키패드 (이름 입력용) -->
+                <div class="keyboard-container korean-keyboard" id="korean-keyboard" style="display: block;">
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㄱ">ㄱ</button>
+                        <button class="key" data-key="ㄲ">ㄲ</button>
+                        <button class="key" data-key="ㄴ">ㄴ</button>
+                        <button class="key" data-key="ㄷ">ㄷ</button>
+                        <button class="key" data-key="ㄸ">ㄸ</button>
+                        <button class="key" data-key="ㄹ">ㄹ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅁ">ㅁ</button>
+                        <button class="key" data-key="ㅂ">ㅂ</button>
+                        <button class="key" data-key="ㅃ">ㅃ</button>
+                        <button class="key" data-key="ㅅ">ㅅ</button>
+                        <button class="key" data-key="ㅆ">ㅆ</button>
+                        <button class="key" data-key="ㅇ">ㅇ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅈ">ㅈ</button>
+                        <button class="key" data-key="ㅉ">ㅉ</button>
+                        <button class="key" data-key="ㅊ">ㅊ</button>
+                        <button class="key" data-key="ㅋ">ㅋ</button>
+                        <button class="key" data-key="ㅌ">ㅌ</button>
+                        <button class="key" data-key="ㅍ">ㅍ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅎ">ㅎ</button>
+                        <button class="key" data-key="ㅏ">ㅏ</button>
+                        <button class="key" data-key="ㅐ">ㅐ</button>
+                        <button class="key" data-key="ㅑ">ㅑ</button>
+                        <button class="key" data-key="ㅒ">ㅒ</button>
+                        <button class="key" data-key="ㅓ">ㅓ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅔ">ㅔ</button>
+                        <button class="key" data-key="ㅕ">ㅕ</button>
+                        <button class="key" data-key="ㅖ">ㅖ</button>
+                        <button class="key" data-key="ㅗ">ㅗ</button>
+                        <button class="key" data-key="ㅘ">ㅘ</button>
+                        <button class="key" data-key="ㅙ">ㅙ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅚ">ㅚ</button>
+                        <button class="key" data-key="ㅛ">ㅛ</button>
+                        <button class="key" data-key="ㅜ">ㅜ</button>
+                        <button class="key" data-key="ㅝ">ㅝ</button>
+                        <button class="key" data-key="ㅞ">ㅞ</button>
+                        <button class="key" data-key="ㅟ">ㅟ</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="ㅠ">ㅠ</button>
+                        <button class="key" data-key="ㅡ">ㅡ</button>
+                        <button class="key" data-key="ㅢ">ㅢ</button>
+                        <button class="key" data-key="ㅣ">ㅣ</button>
+                        <button class="key special-key" data-key="space">␣</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key special-key" data-key="switch">123</button>
+                        <button class="key special-key delete-key" data-key="del">⌫</button>
+                    </div>
+                </div>
+                
+                <!-- 숫자 키패드 (전화번호 입력용) -->
+                <div class="keyboard-container numeric-keyboard" id="numeric-keyboard" style="display: none;">
+                    <div class="keyboard-row">
+                        <button class="key" data-key="1">1</button>
+                        <button class="key" data-key="2">2</button>
+                        <button class="key" data-key="3">3</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="4">4</button>
+                        <button class="key" data-key="5">5</button>
+                        <button class="key" data-key="6">6</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="7">7</button>
+                        <button class="key" data-key="8">8</button>
+                        <button class="key" data-key="9">9</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key" data-key="-">-</button>
+                        <button class="key" data-key="0">0</button>
+                        <button class="key delete-key" data-key="del">⌫</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key special-key" data-key="switch">가나다</button>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" id="back-button" class="btn secondary-btn">이전</button>
+                    <button type="submit" form="signup-form" class="btn primary-btn">가입하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 포커스된 입력 필드 참조 저장
+        let focusedInput = null;
+        const koreanKeyboard = document.getElementById('korean-keyboard');
+        const numericKeyboard = document.getElementById('numeric-keyboard');
+        
+        // 초기 상태 설정
+        window.onload = function() {
+            document.getElementById('name').focus();
+            koreanKeyboard.style.display = 'block';
+            numericKeyboard.style.display = 'none';
+        };
+        
+        // 입력 필드 포커스 이벤트 처리
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                focusedInput = this;
+                
+                // 이름 필드에 포커스일 때 한글 키패드 표시
+                if (this.id === 'name') {
+                    koreanKeyboard.style.display = 'block';
+                    numericKeyboard.style.display = 'none';
+                }
+                // 전화번호 필드에 포커스일 때 숫자 키패드 표시
+                else if (this.id === 'phone') {
+                    koreanKeyboard.style.display = 'none';
+                    numericKeyboard.style.display = 'block';
+                }
+            });
+        });
+        
+        // 한글 입력을 위한 변수들
+        let chosung = '';  // 초성
+        let jungsung = ''; // 중성
+        let jongsung = ''; // 종성
+        let hangulState = 0; // 0: 초기, 1: 초성 입력, 2: 중성 입력, 3: 종성 입력
+        
+        // 한글 자모음 코드 매핑
+        const CHOSUNG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+        const JUNGSUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+        const JONGSUNG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+        
+        // 한글 자모음을 합쳐 하나의 문자로 만드는 함수
+        function combineHangul(cho, jung, jong) {
+            // 유니코드 한글 = 초성(0~18) × 21 × 28 + 중성(0~20) × 28 + 종성(0~27) + 0xAC00
+            const choIndex = CHOSUNG.indexOf(cho);
+            const jungIndex = JUNGSUNG.indexOf(jung);
+            const jongIndex = jong ? JONGSUNG.indexOf(jong) : 0;
+            
+            if (choIndex === -1 || jungIndex === -1) return '';
+            
+            const unicodeValue = 0xAC00 + (choIndex * 21 * 28) + (jungIndex * 28) + jongIndex;
+            return String.fromCharCode(unicodeValue);
+        }
+        
+        // 한글 입력 처리 함수
+        function processKoreanInput(key) {
+            if (!focusedInput || focusedInput.id !== 'name') return;
+            
+            const currentValue = focusedInput.value;
+            
+            // 초성 처리
+            if (CHOSUNG.includes(key) && (hangulState === 0 || hangulState === 3)) {
+                chosung = key;
+                jungsung = '';
+                jongsung = '';
+                hangulState = 1;
+                
+                // 새 문자 시작
+                focusedInput.value = currentValue + key;
+            }
+            // 중성 처리
+            else if (JUNGSUNG.includes(key) && (hangulState === 1 || hangulState === 2)) {
+                if (hangulState === 1) {
+                    // 초성이 있으면 지우고 초성+중성 조합
+                    jungsung = key;
+                    hangulState = 2;
+                    
+                    focusedInput.value = currentValue.slice(0, -1) + combineHangul(chosung, jungsung, '');
+                } else {
+                    // 이미 중성이 있을 경우 (복합 모음 처리 등)
+                    const prevChar = currentValue.slice(-1);
+                    focusedInput.value = currentValue.slice(0, -1) + key;
+                }
+            }
+            // 종성 처리
+            else if (JONGSUNG.includes(key) && key !== '' && hangulState === 2) {
+                jongsung = key;
+                hangulState = 3;
+                
+                focusedInput.value = currentValue.slice(0, -1) + combineHangul(chosung, jungsung, jongsung);
+            }
+            // 그 외 경우 (공백 등)
+            else {
+                focusedInput.value = currentValue + key;
+                // 상태 초기화
+                hangulState = 0;
+                chosung = '';
+                jungsung = '';
+                jongsung = '';
+            }
+        }
+        
+        // 키보드 키 클릭 이벤트 처리
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', function() {
+                if (!focusedInput) return;
+                
+                const keyValue = this.getAttribute('data-key');
+                
+                if (keyValue === 'del') {
+                    // 마지막 문자 삭제
+                    focusedInput.value = focusedInput.value.slice(0, -1);
+                    // 한글 입력 상태 초기화
+                    hangulState = 0;
+                    chosung = '';
+                    jungsung = '';
+                    jongsung = '';
+                } else if (keyValue === 'space') {
+                    // 공백 추가
+                    focusedInput.value += ' ';
+                    // 한글 입력 상태 초기화
+                    hangulState = 0;
+                    chosung = '';
+                    jungsung = '';
+                    jongsung = '';
+                } else if (keyValue === 'switch') {
+                    // 키패드 전환
+                    if (koreanKeyboard.style.display === 'block') {
+                        koreanKeyboard.style.display = 'none';
+                        numericKeyboard.style.display = 'block';
+                        if (!focusedInput || focusedInput.id === 'name') {
+                            document.getElementById('phone').focus();
+                        }
+                    } else {
+                        koreanKeyboard.style.display = 'block';
+                        numericKeyboard.style.display = 'none';
+                        if (!focusedInput || focusedInput.id === 'phone') {
+                            document.getElementById('name').focus();
+                        }
+                    }
+                    // 한글 입력 상태 초기화
+                    hangulState = 0;
+                    chosung = '';
+                    jungsung = '';
+                    jongsung = '';
+                } else if (focusedInput.id === 'name' && (CHOSUNG.includes(keyValue) || JUNGSUNG.includes(keyValue) || JONGSUNG.includes(keyValue))) {
+                    // 한글 입력 처리
+                    processKoreanInput(keyValue);
+                } else {
+                    // 그 외 키값 추가 (숫자 등)
+                    focusedInput.value += keyValue;
+                }
+            });
+        });
+        
+        // 폼 제출 처리
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 폼 데이터 수집 및 저장
+            const userData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value
+            };
+            
+            // 로컬 스토리지에 저장 (실제 구현에서는 서버에 저장)
+            localStorage.setItem('userName', userData.name);
+            localStorage.setItem('userPhone', userData.phone);
+            
+            // 메인 메뉴 페이지로 이동
+            window.location.href = '{{ url_for("menu_existing") }}';
+        });
+        
+        // 이전 버튼 클릭 시 회원가입 확인 페이지로 돌아가기
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.location.href = '{{ url_for("signup_check") }}';
+        });
+    </script>
+</body>
+</html>

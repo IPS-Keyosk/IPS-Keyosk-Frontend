@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 메인 메뉴</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="menu-screen">
+                <header class="menu-header">
+                    <div class="user-welcome">
+                        <span id="user-name">김고객</span>님, 안녕하세요!
+                    </div>
+                    <div class="tab-navigation">
+                        <button class="tab-btn active" data-tab="recommend">추천 메뉴</button>
+                        <button class="tab-btn" data-tab="drinks">음료</button>
+                        <button class="tab-btn" data-tab="desserts">디저트</button>
+                    </div>
+                </header>
+                
+                <main class="menu-content">
+                    <!-- 추천 메뉴 탭 -->
+                    <div class="tab-content active" id="recommend-tab">
+                        <h2 class="section-title">자주 주문하신 메뉴</h2>
+                        <div class="recent-orders">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='americano.png') }}"alt="아메리카노">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>아메리카노</h3>
+                                    <p class="price">4,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='카페라떼.png') }}"alt="카페라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>카페라떼</h3>
+                                    <p class="price">5,000원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="크로플">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>크로플</h3>
+                                    <p class="price">5,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h2 class="section-title">이런 메뉴는 어떠세요?</h2>
+                        <div class="recommended-items">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='americano.png') }}" alt="바닐라라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>바닐라라떼</h3>
+                                    <p class="price">5,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="티라미수">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>티라미수</h3>
+                                    <p class="price">6,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='딸기라떼.png') }}" alt="딸기 라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>딸기 라떼떼</h3>
+                                    <p class="price">6,000원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 음료 탭 -->
+                    <div class="tab-content" id="drinks-tab">
+                        <div class="menu-grid">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='americano.png') }}"alt="아메리카노">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>아메리카노</h3>
+                                    <p class="price">4,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='카페라떼.png') }}"alt="카페라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>카페라떼</h3>
+                                    <p class="price">5,000원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='americano.png') }}" alt="바닐라라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>바닐라라떼</h3>
+                                    <p class="price">5,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                        
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='딸기라떼.png') }}" alt="딸기 라떼">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>딸기 라떼</h3>
+                                    <p class="price">6,000원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='초코프라페.png') }}" alt="초코 프라페">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>초코 프라페</h3>
+                                    <p class="price">6,300원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="{{ url_for('static', filename='americano.png') }}"alt="아이스티">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>아이스티</h3>
+                                    <p class="price">4,800원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 디저트 탭 -->
+                    <div class="tab-content" id="desserts-tab">
+                        <div class="menu-grid">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="크로플">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>크로플</h3>
+                                    <p class="price">5,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="티라미수">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>티라미수</h3>
+                                    <p class="price">6,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="초코 브라우니">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>초코 브라우니</h3>
+                                    <p class="price">5,800원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="베이글">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>베이글</h3>
+                                    <p class="price">4,200원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="치즈케이크">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>치즈케이크</h3>
+                                    <p class="price">6,000원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://via.placeholder.com/150" alt="마카롱">
+                                </div>
+                                <div class="menu-item-info">
+                                    <h3>마카롱</h3>
+                                    <p class="price">2,500원</p>
+                                    <button class="add-to-cart-btn">담기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                
+                <footer class="menu-footer">
+                    <div class="cart-preview">
+                        <div class="cart-info">
+                            <span class="cart-count">0</span>개<br>항목
+                        </div>
+                        <div class="cart-total">
+                            총액: <br><span class="total-price">0</span>원
+                        </div>
+                    </div>
+                    <button class="checkout-btn" disabled>결제하기기</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 사용자 이름 표시
+        const userName = localStorage.getItem('userName') || '고객';
+        document.getElementById('user-name').textContent = userName;
+        
+        // 탭 전환 기능
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 모든 탭 버튼에서 active 클래스 제거
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                // 클릭된 탭 버튼에 active 클래스 추가
+                button.classList.add('active');
+                
+                // 모든 탭 콘텐츠 숨기기
+                tabContents.forEach(content => content.classList.remove('active'));
+                // 해당 탭 콘텐츠 표시
+                const tabId = button.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 장바구니 기능
+        let cart = [];
+        const cartCountElement = document.querySelector('.cart-count');
+        const totalPriceElement = document.querySelector('.total-price');
+        const checkoutButton = document.querySelector('.checkout-btn');
+        
+        // 메뉴 항목에 클릭 이벤트 추가
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const menuItem = this.closest('.menu-item');
+                const itemName = menuItem.querySelector('h3').textContent;
+                const itemPrice = parseInt(menuItem.querySelector('.price').textContent.replace(/[^0-9]/g, ''));
+                
+                // 장바구니에 항목 추가
+                cart.push({
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: 1
+                });
+                
+                // 장바구니 UI 업데이트
+                updateCartUI();
+                
+                // 추가 애니메이션
+                const clone = menuItem.cloneNode(true);
+                clone.classList.add('menu-item-clone');
+                document.body.appendChild(clone);
+                
+                const rect = menuItem.getBoundingClientRect();
+                const cartRect = document.querySelector('.cart-preview').getBoundingClientRect();
+                
+                clone.style.position = 'fixed';
+                clone.style.top = rect.top + 'px';
+                clone.style.left = rect.left + 'px';
+                clone.style.width = rect.width + 'px';
+                clone.style.height = rect.height + 'px';
+                clone.style.transition = 'all 0.5s ease-in-out';
+                clone.style.zIndex = '1000';
+                
+                setTimeout(() => {
+                    clone.style.top = cartRect.top + 'px';
+                    clone.style.left = cartRect.left + 'px';
+                    clone.style.width = '50px';
+                    clone.style.height = '50px';
+                    clone.style.opacity = '0.5';
+                }, 10);
+                
+                setTimeout(() => {
+                    document.body.removeChild(clone);
+                }, 500);
+            });
+        });
+        
+        // 장바구니 UI 업데이트 함수
+        function updateCartUI() {
+            // 장바구니 항목 수 업데이트
+            cartCountElement.textContent = cart.length;
+            
+            // 총액 계산
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            totalPriceElement.textContent = totalPrice.toLocaleString();
+            
+            // 결제 버튼 활성화/비활성화
+            checkoutButton.disabled = cart.length === 0;
+        }
+        
+        // 결제 버튼 클릭 이벤트
+        checkoutButton.addEventListener('click', function() {
+            // 장바구니 데이터를 로컬 스토리지에 저장
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // 결제 페이지로 이동
+            window.location.href = '{{ url_for("checkout") }}';
+        });
+    </script>
+</body>
+</html>
