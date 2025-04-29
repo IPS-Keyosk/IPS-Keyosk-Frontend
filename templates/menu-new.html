@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 메뉴</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu-new.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="menu-screen">
+                <header class="menu-header">
+                    <div class="user-welcome">
+                        안녕하세요! 무엇을 도와드릴까요?
+                    </div>
+                    <div class="tab-navigation">
+                        <button class="tab-btn active" data-tab="drinks">음료</button>
+                        <button class="tab-btn" data-tab="desserts">디저트</button>
+                    </div>
+                </header>
+                
+                <main class="menu-content">
+                    <!-- 음료 탭 -->
+                    <div class="tab-content active" id="drinks-tab">
+                        <div class="menu-grid">
+                            <!-- 메뉴 항목들 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 디저트 탭 -->
+                    <div class="tab-content" id="desserts-tab">
+                        <div class="menu-grid">
+                            <!-- 메뉴 항목들 -->
+                        </div>
+                    </div>
+                </main>
+                
+                <footer class="menu-footer">
+                    <div class="cart-preview">
+                        <div class="cart-info">
+                            <span class="cart-count">0</span>개 항목
+                        </div>
+                        <div class="cart-total">
+                            총액: <span class="total-price">0</span>원
+                        </div>
+                    </div>
+                    <button class="checkout-btn" disabled>결제하기</button>
+                </footer>
+                
+                <!-- 시선 추적 카메라 (키오스크 화면 내부에 위치) -->
+                <div class="eye-tracking-container">
+                    <div class="eye-tracking-camera">
+                        <div class="camera-placeholder">
+                            <div class="camera-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="eye-tracker-status">
+                            <span>시선 분석 중...</span>
+                            <div class="tracker-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 시선 추적 시뮬레이션
+        let userInteractionTimer = null;
+        let lastInteractionTime = Date.now();
+        
+        // 사용자 상호작용 감지
+        function resetUserInteractionTimer() {
+            lastInteractionTime = Date.now();
+            clearTimeout(userInteractionTimer);
+            
+            // 30초 동안 상호작용이 없으면 디지털 약자로 간주하고 간편 모드로 전환
+            userInteractionTimer = setTimeout(() => {
+                window.location.href = '{{ url_for("menu_simple") }}';
+            }, 5000); // 30초
+        }
+        
+        // 모든 사용자 상호작용 감지
+        document.addEventListener('click', resetUserInteractionTimer);
+        document.addEventListener('touchstart', resetUserInteractionTimer);
+        document.addEventListener('mousemove', resetUserInteractionTimer);
+        document.addEventListener('keydown', resetUserInteractionTimer);
+        
+        // 페이지 로드 시 타이머 시작
+        resetUserInteractionTimer();
+        
+        // 시선 추적 시뮬레이션 시작
+        setTimeout(() => {
+            document.querySelector('.tracker-indicator').classList.add('active');
+        }, 2000);
+        
+        // 탭 전환 기능
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 모든 탭 버튼에서 active 클래스 제거
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                // 클릭된 탭 버튼에 active 클래스 추가
+                button.classList.add('active');
+                
+                // 모든 탭 콘텐츠 숨기기
+                tabContents.forEach(content => content.classList.remove('active'));
+                // 해당 탭 콘텐츠 표시
+                const tabId = button.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 장바구니 기능
+        let cart = [];
+        const cartCountElement = document.querySelector('.cart-count');
+        const totalPriceElement = document.querySelector('.total-price');
+        const checkoutButton = document.querySelector('.checkout-btn');
+        
+        // 결제 버튼 클릭 이벤트
+        checkoutButton.addEventListener('click', function() {
+            // 장바구니 데이터를 로컬 스토리지에 저장
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // 결제 페이지로 이동
+            window.location.href = '{{ url_for("checkout") }}';
+        });
+    </script>
+</body>
+</html>

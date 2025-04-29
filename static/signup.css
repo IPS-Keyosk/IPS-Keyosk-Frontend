@@ -1,0 +1,188 @@
+/* Google 폰트 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Montserrat:wght@700&display=swap');
+
+.signup-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 30px; /* 상단 패딩 줄임 */
+}
+
+.signup-screen .form-container {
+    width: 70% !important;
+    max-width: 500px !important;
+    margin: 1rem auto !important; /* 좌우 자동 마진으로 중앙 정렬 */
+    animation: fadeIn 1s ease-in-out;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.signup-screen .input-group {
+    margin-bottom: 1rem !important;
+    text-align: center !important; /* 중앙 정렬 */
+}
+
+.signup-screen .input-group label {
+    display: block;
+    font-size: 1.2rem !important;
+    margin-bottom: 0.3rem !important;
+    color: #be8c56a1;
+    text-align: center !important; /* 중앙 정렬 */
+}
+
+.signup-screen .input-group input {
+    width: 100%;
+    padding: 8px 12px !important; /* 패딩 축소 */
+    font-size: 1.2rem !important; /* 크기 축소 */
+    border: 1px solid rgba(190, 140, 86, 0.3);
+    border-radius: 8px !important;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #444;
+    transition: border-color 0.3s ease;
+}
+
+.signup-screen .input-group input:focus {
+    outline: none;
+    border-color: #be8c56a1;
+    box-shadow: 0 0 8px rgba(190, 140, 86, 0.3);
+}
+
+.signup-screen .button-container {
+    display: flex;
+    justify-content: center !important;
+    margin-top: 1.5rem !important; /* 키패드와의 간격 */
+    gap: 80px !important; /* 버튼 사이 간격 */
+    width: 100% !important;
+}
+
+.signup-screen .btn {
+    padding: 6px 15px !important; /* 패딩 더 축소 */
+    font-size: 0.8rem !important; /* 글씨 크기 더 축소 */
+    border-radius: 30px !important;
+    min-width: 80px !important; /* 최소 너비 더 축소 */
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.primary-btn {
+    background-color: #be8c56a1;
+    color: white;
+    box-shadow: 0 5px 15px rgba(190, 140, 86, 0.3);
+}
+
+.primary-btn:hover {
+    background-color: #a17648a1;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(190, 140, 86, 0.4);
+}
+
+.secondary-btn {
+    background-color: transparent;
+    border: 2px solid #be8c56a1;
+    color: #be8c56a1;
+}
+
+.secondary-btn:hover {
+    background-color: rgba(190, 140, 86, 0.1);
+}
+
+/* 키보드 컨테이너 스타일 */
+.keyboard-container {
+    width: 70% !important;
+    max-width: 500px !important;
+    margin: 0.5rem auto !important;
+    max-height: 45vh !important; /* 화면의 45% 높이 제한 */
+    overflow-y: auto !important;
+}
+
+/* 한글 키패드 스타일 */
+.korean-keyboard .keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.korean-keyboard .key {
+    flex: 1;
+    min-width: 30px;
+    max-width: 45px;
+    padding: 8px 5px;
+    font-size: 1.1rem;
+    border: 1px solid rgba(190, 140, 86, 0.3);
+    border-radius: 6px;
+    background-color: white;
+    color: #be8c56a1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 숫자 키패드 스타일 */
+.numeric-keyboard .keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.numeric-keyboard .key {
+    flex: 1;
+    padding: 5px !important; /* 패딩 더 줄임 */
+    font-size: 0.9rem !important; /* 폰트 크기 더 줄임 */
+    border: 1px solid rgba(190, 140, 86, 0.3);
+    border-radius: 4px !important; /* 둥글기 더 줄임 */
+    background-color: white;
+    color: #be8c56a1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.key:hover {
+    background-color: rgba(190, 140, 86, 0.1);
+}
+
+.key:active {
+    background-color: rgba(190, 140, 86, 0.2);
+    transform: scale(0.95);
+}
+
+.special-key {
+    background-color: rgba(190, 140, 86, 0.05);
+}
+
+.delete-key {
+    font-size: 1.5rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-height: 1080px) {
+    .signup-screen {
+        padding-top: 20px;
+    }
+    
+    .keyboard-container {
+        max-height: 40vh !important;
+    }
+    
+    .signup-screen .btn {
+        padding: 5px 12px !important;
+        font-size: 0.7rem !important;
+    }
+}

@@ -1,0 +1,121 @@
+/* 시선 추적 카메라 */
+.eye-tracking-container {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.eye-tracking-camera {
+    width: 180px;
+    height: 200px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    border: 3px solid #be8c56;
+    animation: blink-border 2s infinite;
+}
+
+.camera-placeholder {
+    width: 100%;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.camera-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(190, 140, 86, 0.1);
+    color: #be8c56a1;
+}
+
+.eye-tracker-status {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.eye-tracker-status span {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.tracker-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    position: relative;
+}
+
+.tracker-indicator::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid #ccc;
+    opacity: 0;
+}
+
+.tracker-indicator.active {
+    background-color: #4CAF50;
+    animation: pulse-indicator 2s infinite;
+}
+
+.tracker-indicator.active::before {
+    animation: pulse-ring 2s infinite;
+    opacity: 1;
+    border-color: #4CAF50;
+}
+
+@keyframes blink-border {
+    0% { border-color: #be8c56; }
+    50% { border-color: #ff0000; }
+    100% { border-color: #be8c56; }
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse-indicator {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 얼굴인식</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='camera.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="camera-screen">
+                <h1 class="title">얼굴 인식</h1>
+                <div class="camera-container">
+                    <div id="camera-view">
+                        <div class="camera-placeholder">
+                            <div class="camera-icon">
+                                <span class="camera-pulse"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="face-outline"></div>
+                </div>
+                <p class="camera-instruction">화면 중앙에 얼굴을<br> 맞춰주세요</p>
+                <div class="camera-buttons">
+                    <button id="skip-button" class="btn secondary-btn">건너뛰기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 카메라 화면 표시 시뮬레이션
+        setTimeout(() => {
+            document.querySelector('.camera-placeholder').classList.add('scanning');
+            
+            // 3초 후 자동으로 인식 완료
+            setTimeout(() => {
+                // 고객 인식 여부에 따라 다른 페이지로 이동
+                // 임시로 랜덤하게 회원가입/로그인 페이지로 이동
+                if (Math.random() > 0.5) {
+                    window.location.href = '{{ url_for("login") }}'; // 기존 고객
+                } else {
+                    window.location.href = '{{ url_for("signup_check") }}'; // 신규 고객
+                }
+            }, 3000);
+        }, 1000);
+        
+        // 건너뛰기 버튼
+        document.getElementById('skip-button').addEventListener('click', function() {
+            window.location.href = '{{ url_for("signup_check") }}';
+        });
+    </script>
+</body>
+</html>

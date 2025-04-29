@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 회원가입 여부</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='signup-check.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="signup-check-screen">
+                <h1 class="title">회원가입</h1>
+                <div class="message-container">
+                    <p class="message">회원가입을<br>하시겠습니까?</p>
+                </div>
+                <div class="button-container">
+                    <button id="no-button" class="btn secondary-btn">아니오</button>
+                    <button id="yes-button" class="btn primary-btn">예</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 예 버튼 클릭 시 회원가입 페이지로 이동
+        document.getElementById('yes-button').addEventListener('click', function() {
+            window.location.href = '{{ url_for("signup") }}';
+        });
+        
+        // 아니오 버튼 클릭 시 비회원 메뉴 페이지로 이동
+        document.getElementById('no-button').addEventListener('click', function() {
+            window.location.href = '{{ url_for("menu_new") }}';
+        });
+    </script>
+</body>
+</html>
