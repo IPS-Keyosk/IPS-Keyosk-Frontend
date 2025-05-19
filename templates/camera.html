@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyosk 얼굴인식</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='camera.css') }}">
+<style>
+    /* 연령 분석 결과 스타일 */
+    .age-analysis {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+    
+    .age-analysis.visible {
+        opacity: 1;
+    }
+    
+    .age-analysis.elderly {
+        background-color: #f39c12;
+        color: #fff;
+    }
+    
+    .age-analysis.young {
+        background-color: #3498db;
+        color: #fff;
+    }
+
+    /* AU 분석 결과 테이블 스타일 */
+    .au-table {
+        width: 100%;
+        max-width: 400px;
+        margin: 10px auto;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .au-table.visible {
+        opacity: 1;
+    }
+    
+    .au-table th, .au-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .au-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .au-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .au-value {
+        font-weight: bold;
+    }
+    
+    .au-value.elderly {
+        color: #e74c3c;
+    }
+    
+    .au-value.young {
+        color: #3498db;
+    }
+</style>
+</head>
+<body>
+<div class="kiosk-container">
+<div class="kiosk-content">
+<div class="camera-screen">
+<h1 class="title">얼굴 인식</h1>
+<div class="camera-container">
+<div id="camera-view">
+<video id="camera-stream" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+<div class="camera-placeholder">
+<div class="camera-icon">
+<span class="camera-pulse"></span>
+</div>
+</div>
+</div>
+<div class="face-outline"></div>
+</div>
+<p class="camera-instruction">화면 중앙에 얼굴을<br> 맞춰주세요</p>
+<div class="loading" id="loading-spinner"></div>
+<p id="recognition-status" class="recognition-status"></p>
+
+<!-- 연령 분석 결과 표시 영역 추가 -->
+<div id="age-analysis" class="age-analysis">
+    <span id="age-result"></span>
+    <span id="age-confidence"></span>
+</div>
+
+<!-- AU 분석 결과 테이블 추가 -->
+<table id="au-table" class="au-table">
+    <thead>
+        <tr>
+            <th>특성</th>
+            <th>설명</th>
+            <th>측정값</th>
+        </tr>
+    </thead>
+    <tbody id="au-tbody">
+        <!-- 여기에 AU 결과가 동적으로 추가됨 -->
+    </tbody>
+</table>
+
+<div class="camera-buttons">
+<button id="skip-button" class="btn secondary-btn">건너뛰기</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+const video = document.getElementById('camera-stream');
+const placeholder = document.querySelector('.camera-placeholder');
+const statusText = document.getElementById('recognition-status');
+const loadingSpinner = document.getElementById('loading-spinner');
+const ageAnalysis = document.getElementById('age-analysis');
+const ageResult = document.getElementById('age-result');
+const ageConfidence = document.getElementById('age-confidence');
+const auTable = document.getElementById('au-table');
+const auTbody = document.getElementById('au-tbody');
+
+// 카메라 접근
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: "user",
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            } 
+        });
+        video.srcObject = stream;
+        placeholder.style.display = 'none'; // 카메라 나오면 placeholder 숨김
+        
+        // 카메라가 완전히 로드된 후 얼굴 인식 시작
+        video.onloadeddata = function() {
+            // 3초 후 얼굴 인식 시작 (카메라 준비 시간)
+            setTimeout(() => {
+                statusText.textContent = "얼굴을 인식할 준비가 되었습니다.";
+                statusText.className = "recognition-status warning";
+                
+                // 2초 후 실제 인식 시작
+                setTimeout(() => {
+                    captureAndRecognize();
+                }, 2000);
+            }, 3000);
+        };
+    } catch (error) {
+        console.error('카메라 접근 실패:', error);
+        statusText.textContent = "카메라에 접근할 수 없습니다. 회원 확인 페이지로 이동합니다.";
+        statusText.className = "recognition-status error";
+        
+        setTimeout(() => {
+            window.location.href = '/menu-new';
+        }, 2000);
+    }
+}
+
+// AU 분석 결과 테이블 생성 함수
+function renderAuResults(auValues, auExplanations) {
+    // 기존 내용 지우기
+    auTbody.innerHTML = '';
+    
+    if (!auExplanations || Object.keys(auExplanations).length === 0) {
+        auTable.classList.remove('visible');
+        return;
+    }
+    
+    // AU 결과 표시
+    for (const [au, data] of Object.entries(auExplanations)) {
+        const row = document.createElement('tr');
+        
+        // AU 코드
+        const codeCell = document.createElement('td');
+        codeCell.textContent = au;
+        row.appendChild(codeCell);
+        
+        // AU 설명
+        const descCell = document.createElement('td');
+        descCell.textContent = data.explanation;
+        row.appendChild(descCell);
+        
+        // AU 값
+        const valueCell = document.createElement('td');
+        const valueSpan = document.createElement('span');
+        
+        // AU45는 낮을수록 노인 특성
+        const isElderlyIndicator = (au === 'AU45') 
+            ? data.value < data.threshold
+            : data.value > data.threshold;
+            
+        valueSpan.className = `au-value ${isElderlyIndicator ? 'elderly' : 'young'}`;
+        valueSpan.textContent = data.value.toFixed(2);
+        valueCell.appendChild(valueSpan);
+        row.appendChild(valueCell);
+        
+        auTbody.appendChild(row);
+    }
+    
+    // 표 표시
+    auTable.classList.add('visible');
+}
+
+// 이미지 캡처 및 얼굴 인식 요청
+async function captureAndRecognize() {
+    try {
+        statusText.textContent = "얼굴을 인식 중입니다...";
+        statusText.className = "recognition-status warning";
+        loadingSpinner.style.display = 'block';
+        
+        // 비디오가 제대로 로드되었는지 확인
+        if (!video || !video.videoWidth) {
+            throw new Error("카메라가 준비되지 않았습니다");
+        }
+        
+        // 캔버스 생성 및 이미지 캡처
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // 이미지를 Base64로 인코딩 (품질 조정으로 데이터 크기 감소)
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
+        console.log("서버에 얼굴 인식 요청 전송...");
+        
+        // 가능한 네트워크 오류 처리
+        let response;
+        try {
+            // 서버에 이미지 전송하여 얼굴 인식
+            response = await fetch('/recognize_face', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image: imageData }),
+            });
+            console.log("서버 응답 상태:", response.status);
+        } catch (networkError) {
+            console.error("네트워크 오류:", networkError);
+            throw new Error("서버 연결 중 오류가 발생했습니다");
+        }
+        
+        // 서버 오류 응답 처리
+        if (!response.ok) {
+            console.error(`서버 오류 응답: ${response.status}`);
+            throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+        
+        // JSON 파싱 오류 처리
+        let result;
+        try {
+            result = await response.json();
+            console.log("서버 응답 결과:", result);
+        } catch (jsonError) {
+            console.error("JSON 파싱 오류:", jsonError);
+            throw new Error("서버 응답을 처리할 수 없습니다");
+        }
+        
+        loadingSpinner.style.display = 'none';
+        
+        // 연령 분석 결과 처리 (새 사용자인 경우에만)
+        let isElderly = false;
+        if (!result.success && result.is_elderly !== undefined) {
+            isElderly = result.is_elderly;
+            const ageConfidenceValue = result.age_confidence || 0;
+            
+            // 연령 결과 텍스트 설정
+            ageResult.textContent = isElderly ? "노인" : "일반 사용자";
+            ageConfidence.textContent = ` (${Math.round(ageConfidenceValue * 100)}% 확률)`;
+            
+            // 스타일 설정
+            ageAnalysis.className = `age-analysis visible ${isElderly ? 'elderly' : 'young'}`;
+            
+            // AU 분석 결과 표시
+            if (result.au_explanations) {
+                renderAuResults(result.au_values, result.au_explanations);
+            }
+            
+            // 세션 또는 로컬 스토리지에 노인 여부 저장 (회원가입으로 전달하기 위함)
+            localStorage.setItem('isElderly', isElderly);
+            console.log("노인 여부 저장됨:", isElderly);
+        } else {
+            console.log("새 사용자가 아니거나 서버 응답에 is_elderly 정보가 없습니다");
+        }
+        
+        if (result.success) {
+            // 인식 성공: 기존 사용자
+            const userName = result.name;
+            statusText.textContent = `${userName}님, 환영합니다! (${Math.round(result.confidence * 100)}% 일치)`;
+            statusText.className = "recognition-status success";
+            
+            // 사용자 이름 저장
+            localStorage.setItem('userName', userName);
+            console.log(`인식된 사용자: ${userName}. 사용자 정보를 가져옵니다.`);
+            
+            // 서버에서 사용자 정보 가져오기
+            try {
+                const userInfoResponse = await fetch('/get_user_info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: userName }),
+                });
+                
+                if (!userInfoResponse.ok) {
+                    throw new Error(`사용자 정보 요청 오류: ${userInfoResponse.status}`);
+                }
+                
+                const userInfoData = await userInfoResponse.json();
+                
+                if (userInfoData.success) {
+                    // 노인 여부 저장
+                    const isElderlyFromData = userInfoData.is_elderly;
+                    localStorage.setItem('isElderly', isElderlyFromData);
+                    
+                    // 노인 여부에 따라 적절한 페이지로 리다이렉트
+                    if (isElderlyFromData) {
+                        console.log(`${userName}님은 노인 사용자입니다. menu-simple로 이동합니다.`);
+                        setTimeout(() => {
+                            window.location.href = `/menu-simple?user_name=${encodeURIComponent(userName)}`;
+                        }, 2000);
+                    } else {
+                        console.log(`${userName}님은 일반 사용자입니다. menu-existing으로 이동합니다.`);
+                        setTimeout(() => {
+                            window.location.href = `/menu-existing?user_name=${encodeURIComponent(userName)}`;
+                        }, 2000);
+                    }
+                } else {
+                    console.error('사용자 정보를 가져오는 데 실패했습니다:', userInfoData.message);
+                    // 기본 페이지로 이동
+                    setTimeout(() => {
+                        window.location.href = `/menu-existing?user_name=${encodeURIComponent(userName)}`;
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('사용자 정보를 가져오는 중 오류:', error);
+                // 오류 시 기본 페이지로 이동
+                setTimeout(() => {
+                    window.location.href = `/menu-existing?user_name=${encodeURIComponent(userName)}`;
+                }, 2000);
+            }
+        } else {
+            // 인식 실패: 새로운 사용자 - 친절한 메시지 표시
+            statusText.textContent = "처음 방문하셨군요! 메뉴 페이지로 이동합니다.";
+            statusText.className = "recognition-status warning";
+            
+            console.log("연령 분석 결과:", isElderly ? "노인" : "일반 사용자");
+            
+            // 노인 여부에 따라 메시지 추가
+            if (isElderly) {
+                statusText.textContent += " (노인 사용자용 메뉴로 이동합니다)";
+            } else {
+                statusText.textContent += " (일반 메뉴로 이동합니다)";
+            }
+            
+            console.log("이동할 URL:", isElderly ? "/menu-simple-new" : "/menu-new");
+            
+            // 연령 분석 결과에 따라 다른 페이지로 이동
+            setTimeout(() => {
+                if (isElderly) {
+                    window.location.href = '/menu-simple-new';
+                } else {
+                    window.location.href = '/menu-new';
+                }
+            }, 5000); // 연령 확인 결과와 AU 분석 결과를 더 오래 보여주기 위해 시간 증가
+        }
+    } catch (error) {
+        console.error('얼굴 인식 처리 중 오류:', error);
+        loadingSpinner.style.display = 'none';
+        
+        // 오류 발생 시 - 오류 메시지 표시하고 기본 메뉴로 이동
+        statusText.textContent = `오류가 발생했습니다: ${error.message}`;
+        statusText.className = "recognition-status error";
+        
+        // 더 많은 디버그 정보 표시
+        console.debug("비디오 상태:", video ? "로드됨" : "로드되지 않음");
+        if (video) {
+            console.debug("비디오 크기:", video.videoWidth, "x", video.videoHeight);
+        }
+        
+        setTimeout(() => {
+            window.location.href = '/menu-new';
+        }, 3000); // 오류 메시지를 더 오래 보여주기 위해 시간 증가
+    }
+}
+
+// 건너뛰기 버튼
+document.getElementById('skip-button').addEventListener('click', function() {
+    window.location.href = '/menu-new';
+});
+
+// 시작
+startCamera();
+
+// 전역 스코프에서 사용할 결제 완료 후 이동 함수 정의 (다른 페이지에서 참조 가능)
+window.redirectAfterCheckout = function() {
+    // 노인 여부 가져오기
+    const isElderly = localStorage.getItem('isElderly') === 'true';
+    // 회원가입 페이지로 이동하며 노인 여부 전달
+    window.location.href = `/signup-check?is_elderly=${isElderly}`;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 키오스크 컨테이너 */
+.kiosk-container {
+    width: 1080px;
+    height: 1920px;
+    background-color: white;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* 키오스크 콘텐츠 */
+.kiosk-content {
+    background: linear-gradient(135deg, #ffe6e6, #fafad2);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 메뉴 화면 */
+.menu-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+/* 헤더 영역 */
+.menu-header {
+    padding: 12px;
+    background-color: #c53030;
+    color: white;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-welcome {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 메뉴 콘텐츠 영역 */
+.menu-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    background-color: transparent;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px;
+}
+
+/* 메뉴 아이템 */
+.menu-item {
+    border: 2px solid #c53030;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+    background-color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1/2 !important;
+}
+
+/* 메뉴 아이템 이미지 */
+.menu-item-image {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff6f6;
+    border-bottom: 2px solid #c53030;
+    flex-shrink: 0;
+}
+
+.menu-item-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 메뉴 정보 영역 */
+.menu-item-info {
+    padding: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    font-weight: bold !important;
+    flex-grow: 1;
+}
+
+/* 메뉴명과 가격 글자 크기 */
+.menu-item-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.menu-item-price {
+    font-size: 16px;
+    color: #c53030;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 담기 버튼 */
+.add-to-cart-btn {
+    padding: 3px 10px;
+    background-color: #ff9999;
+    color: #333;
+    border: 2px solid #c53030;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 80%;
+    align-self: center;
+    margin-top: 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-btn:hover {
+    background-color: #c53030;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.add-to-cart-btn.clicked {
+    transform: scale(0.95);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 푸터 영역 - 새로운 장바구니 영역 */
+.menu-footer {
+    padding: 10px 12px;
+    background-color: #c4f0ad;
+}
+
+/* 장바구니 미리보기 영역 */
+.cart-preview {
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #c53030;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 200px;
+}
+
+/* 장바구니 요약 정보 */
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 장바구니 아이템 컨테이너 */
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 120px;
+    overflow-y: auto;
+    margin: 5px 0;
+    padding-right: 5px;
+}
+
+/* 개별 장바구니 아이템 */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+/* 장바구니 아이템 이름 */
+.cart-item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 장바구니 아이템 수량 */
+.cart-item-quantity {
+    margin: 0 5px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* 장바구니 아이템 가격 */
+.cart-item-price {
+    margin: 0 5px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* 장바구니 아이템 삭제 버튼 */
+.cart-item-remove {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* 총액 섹션 */
+.total-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* 결제 버튼 */
+.checkout-btn {
+    padding: 8px 18px;
+    background-color: #c53030;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    align-self: center;
+    margin-top: 5px;
+}
+
+.checkout-btn:hover {
+    background-color: #b02727;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.checkout-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 빈 장바구니 메시지 */
+.empty-cart-message {
+    text-align: center;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: #777;
+}
+
+/* 메뉴 추가 알림 */
+.add-notification, .remove-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 153, 153, 0.95);
+    border: 2px solid #c53030;
+    border-radius: 12px;
+    padding: 12px 20px;
+    z-index: 1000;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.3s ease;
+}
+
+.add-notification p, .remove-notification p {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.remove-notification {
+    background-color: #ff6b6b;
+}
+
+.remove-notification p {
+    color: white;
+}
+
+.add-notification.fade-out, .remove-notification.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+@keyframes popIn {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* 스크롤바 개선 */
+.menu-content::-webkit-scrollbar,
+.cart-items::-webkit-scrollbar {
+    width: 8px;
+}
+
+.menu-content::-webkit-scrollbar-track,
+.cart-items::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+}
+
+.menu-content::-webkit-scrollbar-thumb,
+.cart-items::-webkit-scrollbar-thumb {
+    background: #c53030;
+    border-radius: 4px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.menu-content::-webkit-scrollbar-thumb:hover,
+.cart-items::-webkit-scrollbar-thumb:hover {
+    background: #b02727;
+}
+
+/* 포커스 상태 개선 */
+.menu-item:focus, .add-to-cart-btn:focus, .checkout-btn:focus, .cart-item-remove:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 153, 153, 0.8);
+}
+
+/* 화면이 프레임보다 작을 경우 비율 유지 */
+@media (max-height: 1920px) {
+    .kiosk-container {
+        height: 100vh;
+        width: calc(100vh * (1080 / 1920));
+    }
+}
+
+@media (max-width: 1080px) {
+    .kiosk-container {
+        width: 100vw;
+        height: calc(100vw * (1920 / 1080));
+    }
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .menu-item {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .menu-item-image {
+        width: 100%;
+        height: 100px;
+        border-right: none;
+        border-bottom: 2px solid #c53030;
+    }
+    
+    .menu-item-info {
+        text-align: center;
+        align-items: center;
+    }
+    
+    .add-to-cart-btn {
+        align-self: center;
+    }
+    
+    .menu-item-name {
+        font-size: 20px;
+    }
+    
+    .menu-item-price {
+        font-size: 18px;
+    }
+    
+    .add-to-cart-btn {
+        font-size: 16px;
+    }
+    
+    .cart-summary {
+        font-size: 14px;
+    }
+    
+    .checkout-btn {
+        font-size: 16px;
+        padding: 6px 14px;
+    }
+    
+    .user-welcome {
+        font-size: 20px;
+    }
+    
+    .cart-item {
+        font-size: 14px;
+    }
+}

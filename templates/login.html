@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 로그인</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="login-screen">
+                <h1 class="title">로그인</h1>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <div class="avatar-placeholder">
+                            <span class="avatar-text">김</span>
+                        </div>
+                    </div>
+                    <h2 class="user-name">김고객님</h2>
+                    <p class="welcome-message">환영합니다!</p>
+                </div>
+                <div class="login-message">
+                    <p>얼굴 인식에 성공했습니다</p>
+                    <p>자동으로 로그인 중입니다...</p>
+                </div>
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 로그인 시뮬레이션 - 2초 후 메인 페이지로 이동
+        setTimeout(() => {
+            // 로컬 스토리지에 사용자 정보 저장 (실제 구현에서는 서버에서 받아옴)
+            localStorage.setItem('userName', '김고객');
+            localStorage.setItem('userPhone', '010-1234-5678');
+            
+            // 메인 메뉴 페이지로 이동
+            window.location.href = '{{ url_for("menu_existing") }}';
+        }, 2000);
+    </script>
+</body>
+</html>

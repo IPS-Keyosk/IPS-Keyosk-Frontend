@@ -1,0 +1,268 @@
+/* signup-register.css */
+
+/* 컨테이너 스타일 */
+.kiosk-content .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  max-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 제목 스타일 - 크기 축소 */
+.container h1 {
+  color: #be8c56a1;
+  font-size: 32px; /* 크기 줄임 */
+  margin-bottom: 15px;
+  text-align: center;
+  width: 90%;
+}
+
+/* 카메라 컨테이너 스타일 - 모바일에 맞게 조정 */
+.camera-container {
+  position: relative;
+  width: 340px; /* 너비 조정 */
+  height: 340px; /* 높이 조정 */
+  margin: 10px auto;
+  border-radius: 50%; /* 원형으로 만들기 */
+  overflow: hidden;
+  background-color: #f0f0f0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  border: 4px solid #be8c56a1;
+}
+
+/* 비디오 스타일 */
+#video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 정보 텍스트 스타일 - 여백 및 크기 조정 */
+.info-text {
+  background-color: #ffffff;
+  padding: 20px 25px; /* 여백 키움 */
+  border-radius: 20px;
+  margin: 15px 0;
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+  border-left: 5px solid #be8c56a1;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-text p {
+  font-size: 18px;
+  margin: 12px 0; /* 여백 추가 */
+  color: #333;
+  line-height: 1.5;
+}
+
+.info-text #captureCount {
+  font-weight: bold;
+  color: #be8c56a1;
+  font-size: 22px;
+}
+
+/* 버튼 컨테이너 스타일 */
+.buttons {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  justify-content: center;
+  width: 90%;
+}
+
+/* 버튼 스타일 */
+.buttons button {
+  padding: 18px 35px; /* 버튼 크기 키움 */
+  font-size: 18px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  min-width: 150px;
+}
+
+#captureBtn {
+  background-color: #be8c56a1;
+  color: white;
+}
+
+#captureBtn:hover {
+  background-color: #a67b4b;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+#trainBtn {
+  background-color: #c4f0ad;
+  color: #333;
+}
+
+#trainBtn:hover:not(:disabled) {
+  background-color: #b3e099;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+#trainBtn:disabled {
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 진행 상태 컨테이너 스타일 */
+.progress-container {
+  display: none;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  position: absolute; /* fixed에서 absolute로 변경 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%; /* 80%에서 70%로 축소 */
+  max-width: 700px; /* 최대 너비 조정 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+/* 진행 메시지 스타일 */
+.progress-message {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 로더 스타일 */
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #be8c56a1;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 확인 버튼 스타일 */
+.progress-container button {
+  padding: 12px 25px;
+  font-size: 18px;
+  background-color: #be8c56a1;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.progress-container button:hover {
+  background-color: #a67b4b;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* 스캐닝 효과 */
+.camera-container.scanning {
+  background: linear-gradient(135deg, #c4f0ad, #fafad2);
+  animation: scan 3s infinite linear;
+}
+
+@keyframes scan {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* 반응형 스타일 - 키오스크 화면에 최적화 */
+@media (max-height: 900px) {
+  .container h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+  }
+  
+  .camera-container {
+      width: 300px;
+      height: 300px;
+      margin: 5px auto;
+  }
+  
+  .info-text {
+      padding: 15px 20px;
+      margin: 10px 0;
+  }
+  
+  .info-text p {
+      font-size: 16px;
+      margin: 8px 0;
+  }
+  
+  .buttons {
+      margin: 15px 0;
+  }
+  
+  .buttons button {
+      padding: 15px 30px;
+      font-size: 16px;
+  }
+}
+
+/* 매우 작은 화면 대응 */
+@media (max-height: 700px) {
+  .container h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+  }
+  
+  .camera-container {
+      width: 250px;
+      height: 250px;
+  }
+  
+  .info-text p {
+      font-size: 14px;
+      margin: 6px 0;
+  }
+  
+  .buttons button {
+      padding: 12px 25px;
+      font-size: 14px;
+  }
+  .progress {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      margin: 10px 0;
+      height: 20px;
+      overflow: hidden;
+  }
+  
+  .progress-bar {
+      height: 100%;
+      background-color: #be8c56;
+      width: 0%;
+      transition: width 0.5s ease;
+  }
+  
+  .training-stats {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+  }
+}

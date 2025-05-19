@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간편 메뉴</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu-simple.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="menu-screen">
+                <header class="menu-header">
+                    <div class="user-welcome">
+                        원하시는 메뉴를<br><담기> 눌러주세요
+                    </div>
+                </header>
+                
+                <main class="menu-content">
+                    <div class="menu-grid">
+                        <!-- 인기 음료 메뉴 -->
+                        <div class="menu-item" data-id="1" data-name="아메리카노" data-price="4500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='americano.png') }}" alt="아메리카노">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">아메리카노</h3>
+                                <p class="menu-item-price">4,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="2" data-name="카페라떼" data-price="5000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='카페라떼.png') }}" alt="카페라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">카페라떼</h3>
+                                <p class="menu-item-price">5,000원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="3" data-name="바닐라라떼" data-price="5500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='바닐라라떼.png') }}" alt="바닐라라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">바닐라라떼</h3>
+                                <p class="menu-item-price">5,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="4" data-name="딸기라떼" data-price="6000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='딸기라떼.png') }}" alt="딸기라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">딸기라떼</h3>
+                                <p class="menu-item-price">6,000원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="5" data-name="초코프라페" data-price="6300">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='초코프라페.png') }}" alt="초코프라페">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">초코프라페</h3>
+                                <p class="menu-item-price">6,300원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="6" data-name="망고라떼" data-price="4800">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='망고라떼.png') }}" alt="망고라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">망고라떼</h3>
+                                <p class="menu-item-price">4,800원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="7" data-name="카페라떼" data-price="5000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='카페라떼.png') }}" alt="카페라떼">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">카페라떼 </h3>
+                                <p class="menu-item-price">5,000원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="8" data-name="바나나주스" data-price="5500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='바나나주스.png') }}" alt="바나나주스">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">바나나주스</h3>
+                                <p class="menu-item-price">5,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="9" data-name="딸기바나나주스" data-price="6000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='딸기바나나주스.png') }}" alt="딸기바나나주스">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">딸기바나나주스</h3>
+                                <p class="menu-item-price">6,000원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="10" data-name="딸기주스" data-price="6300">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='딸기주스.png') }}" alt="딸기주스">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">딸기주스</h3>
+                                <p class="menu-item-price">6,300원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="11" data-name="배주스" data-price="4800">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='배주스.png') }}" alt="배주스">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">배주스</h3>
+                                <p class="menu-item-price">4,800원</p>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-id="101" data-name="호두스콘" data-price="5500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='호두스콘.png') }}" alt="호두스콘">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">호두스콘</h3>
+                                <p class="menu-item-price">5,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="102" data-name="초코쿠키" data-price="6500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='초코쿠키.png') }}" alt="초코쿠키">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">초코쿠키</h3>
+                                <p class="menu-item-price">6,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="103" data-name="유자스콘" data-price="5800">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='유자스콘.png') }}"  alt="유자스콘">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">유자스콘</h3>
+                                <p class="menu-item-price">5,800원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="104" data-name="기본스콘" data-price="4200">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='기본스콘.png') }}"  alt="기본스콘">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">기본스콘</h3>
+                                <p class="menu-item-price">4,200원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="105" data-name="마들렌" data-price="6000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='마들렌.png') }}" alt="마들렌">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">마들렌</h3>
+                                <p class="menu-item-price">2,800원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="106" data-name="초코케이크" data-price="5500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='초코케이크.png') }}" alt="초코케이크">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">초코케이크</h3>
+                                <p class="menu-item-price">5,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="107" data-name="당근케이크" data-price="6500">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='당근케이크.png') }}" alt="당근케이크">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">당근케이크</h3>
+                                <p class="menu-item-price">6,500원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="108" data-name="마카롱" data-price="5800">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='마카롱.png') }}"  alt="마카롱">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">마카롱</h3>
+                                <p class="menu-item-price">5,800원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="109" data-name="샌드위치" data-price="4200">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='샌드위치.png') }}"  alt="샌드위치">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">샌드위치</h3>
+                                <p class="menu-item-price">4,200원</p>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item" data-id="110" data-name="호두과자" data-price="6000">
+                            <div class="menu-item-image">
+                                <img src="{{ url_for('static', filename='호두과자.png') }}" alt="호두과자">
+                            </div>
+                            <div class="menu-item-info">
+                                <h3 class="menu-item-name">호두과자</h3>
+                                <p class="menu-item-price">2,800원</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 나머지 메뉴 항목들... -->
+                    </div>
+                </main>
+                
+                <footer class="menu-footer">
+                    <div class="cart-preview">
+                        <div class="cart-summary">
+                            <span>장바구니</span>
+                            <span><span class="cart-count">0</span>개 선택</span>
+                        </div>
+                        <div class="cart-items" id="cart-items-container">
+                            <!-- 장바구니 항목들이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                        <div class="cart-summary">
+                            <div class="total-section">
+                                <span>총액:</span>
+                                <span class="total-price">0</span>원
+                            </div>
+                            <button class="checkout-btn" disabled onclick="proceedToCheckout()">결제</button>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 장바구니 관련 변수
+        // 장바구니 관련 변수
+        let cart = [];
+        const cartCountElement = document.querySelector('.cart-count');
+        const totalPriceElement = document.querySelector('.total-price');
+        const checkoutButton = document.querySelector('.checkout-btn');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            // 세션 스토리지에서 장바구니 데이터 로드
+            const savedCart = sessionStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartUI();
+            }
+            
+            // 장바구니 스타일 조정
+            const cartPreview = document.querySelector('.cart-preview');
+            cartPreview.style.display = 'flex';
+            cartPreview.style.flexDirection = 'column';
+            cartPreview.style.gap = '5px';
+            cartPreview.style.height = 'auto';
+            cartPreview.style.maxHeight = '200px';
+            
+            const cartItems = document.querySelector('.cart-items');
+            cartItems.style.display = 'flex';
+            cartItems.style.flexDirection = 'column';
+            cartItems.style.gap = '4px';
+            cartItems.style.maxHeight = '120px';
+            cartItems.style.overflowY = 'auto';
+            
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            checkoutBtn.style.alignSelf = 'center';
+            checkoutBtn.style.marginTop = '5px';
+            checkoutBtn.style.fontSize = '1.2rem';
+            checkoutBtn.style.padding = '8px 20px';
+            
+            // 메뉴 아이템 클릭 이벤트 추가
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 메뉴 아이템의 데이터 가져오기
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseInt(this.getAttribute('data-price'));
+                    
+                    // 클릭 피드백 효과
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                    
+                    // 장바구니에 추가
+                    addToCart(id, name, price);
+                });
+            });
+        });
+
+        // 장바구니에 아이템 추가
+        function addToCart(id, name, price) {
+            // 이미 장바구니에 있는지 확인
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            // 추가 확인 피드백
+            showAddConfirmation(name);
+            
+            // 장바구니 UI 업데이트
+            updateCartUI();
+        }
+
+        // 장바구니에서 아이템 제거
+        function removeFromCart(id) {
+            const itemIndex = cart.findIndex(item => item.id === id);
+            
+            if (itemIndex !== -1) {
+                // 수량이 1보다 크면 수량만 감소
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                    showRemoveConfirmation(cart[itemIndex].name + " 1개 삭제");
+                } else {
+                    // 수량이 1이면 항목 자체를 제거
+                    const removedItem = cart[itemIndex];
+                    cart.splice(itemIndex, 1);
+                    showRemoveConfirmation(removedItem.name + " 삭제");
+                }
+                
+                // 장바구니 UI 업데이트
+                updateCartUI();
+            }
+        }
+
+        // 메뉴 추가 알림 표시
+        function showAddConfirmation(itemName) {
+            // 기존 알림 제거
+            const existingNotification = document.querySelector('.add-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // 새 알림 생성
+            const notification = document.createElement('div');
+            notification.className = 'add-notification';
+            notification.innerHTML = `<p>${itemName} 담기 !</p>`;
+            
+            document.body.appendChild(notification);
+            
+            // 2초 후 알림 사라짐
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 1500);
+        }
+
+        // 메뉴 삭제 알림 표시
+        function showRemoveConfirmation(message) {
+            // 기존 알림 제거
+            const existingNotification = document.querySelector('.remove-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // 새 알림 생성
+            const notification = document.createElement('div');
+            notification.className = 'remove-notification';
+            notification.innerHTML = `<p>${message}</p>`;
+            notification.style.backgroundColor = '#ff6b6b';
+            
+            document.body.appendChild(notification);
+            
+            // 2초 후 알림 사라짐
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 1500);
+        }
+
+        // 장바구니 UI 업데이트
+        function updateCartUI() {
+            const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            
+            cartCountElement.textContent = totalQuantity;
+            totalPriceElement.textContent = totalPrice.toLocaleString();
+            
+            // 결제 버튼 활성화/비활성화
+            checkoutButton.disabled = totalQuantity === 0;
+            
+            // 장바구니 항목 목록 업데이트
+            cartItemsContainer.innerHTML = '';
+            
+            // 장바구니가 비어있지 않은 경우
+            if (cart.length > 0) {
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.style.display = 'flex';
+                    cartItem.style.justifyContent = 'space-between';
+                    cartItem.style.alignItems = 'center';
+                    cartItem.style.padding = '8px';
+                    cartItem.style.backgroundColor = '#f9f9f9';
+                    cartItem.style.borderRadius = '8px';
+                    cartItem.style.fontSize = '1.1rem';
+                    cartItem.style.margin = '2px 0';
+                    
+                    cartItem.innerHTML = `
+                        <span class="cart-item-name" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</span>
+                        <span class="cart-item-quantity" style="margin: 0 5px; min-width: 20px; text-align: center;">x${item.quantity}</span>
+                        <span class="cart-item-price" style="margin: 0 5px; font-weight: bold; min-width: 60px; text-align: right;">${(item.price * item.quantity).toLocaleString()}원</span>
+                        <button class="cart-item-remove" data-id="${item.id}" style="background-color: #ff6b6b; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 16px; display: flex; align-items: center; justify-content: center; margin-left: 5px;">×</button>
+                    `;
+                    
+                    cartItemsContainer.appendChild(cartItem);
+                });
+                
+                // 취소 버튼에 이벤트 리스너 추가
+                const removeButtons = document.querySelectorAll('.cart-item-remove');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        // 이벤트 버블링 방지
+                        e.stopPropagation();
+                        
+                        const id = this.getAttribute('data-id');
+                        removeFromCart(id);
+                    });
+                });
+            } else {
+                // 장바구니가 비어있는 경우
+                const emptyCartMessage = document.createElement('div');
+                emptyCartMessage.className = 'empty-cart-message';
+                
+                emptyCartMessage.style.textAlign = 'center';
+                emptyCartMessage.style.padding = '10px';
+                emptyCartMessage.style.fontSize = '1.2rem';
+                emptyCartMessage.style.color = '#777';
+                cartItemsContainer.appendChild(emptyCartMessage);
+            }
+            
+            // 장바구니 데이터를 세션 스토리지에 저장
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // 결제 페이지로 이동
+        function proceedToCheckout() {
+            // 장바구니가 비어있지 않은 경우에만 이동
+            if (cart.length > 0) {
+                // 장바구니 데이터를 세션 스토리지에 저장
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                // 디지털 약자용 결제 페이지로 이동
+                window.location.href = "{{ url_for('checkout_simple') }}";
+            }
+        }
+
+        // 일반 모드로 돌아가는 버튼 이벤트
+        document.addEventListener('keydown', function(event) {
+            // Esc 키 눌렀을 때 일반 모드로 돌아가기 (개발자용)
+            if (event.key === 'Escape') {
+                window.location.href = "{{ url_for('menu_new') }}";
+            }
+        });
+    </script>
+</body>
+</html>

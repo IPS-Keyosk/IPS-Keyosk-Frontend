@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간편 결제</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='checkout-simple.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stamps.css') }}">
+</head>
+<body>
+    <div class="checkout-container">
+        <header class="checkout-header">
+            <h1>결제 화면</h1>
+        </header>
+
+        <main class="checkout-content">
+            <section class="order-summary">
+                <h2>주문 내역</h2>
+                <div class="order-items">
+                    <!-- 주문 아이템이 JavaScript로 표시됩니다 -->
+                </div>
+                <div class="order-total">
+                    <span class="total-label">총 금액:</span>
+                    <span class="total-amount">0원</span>
+                </div>
+            </section>
+
+            <!-- 매장/포장 선택 섹션 추가 -->
+            <section class="order-type-section">
+                <h2>매장 또는 포장</h2>
+                <div class="order-type-buttons">
+                    <button class="order-type-btn for-here" onclick="selectOrderType('for-here')">
+                        <div class="icon">🍽️</div>
+                        <span>매장</span>
+                    </button>
+                    <button class="order-type-btn take-out" onclick="selectOrderType('take-out')">
+                        <div class="icon">📦</div>
+                        <span>포장</span>
+                    </button>
+                </div>
+            </section>
+
+            
+
+            <section class="payment-options">
+                <h2>결제 방법 선택</h2>
+                <div class="payment-buttons">
+                    <button class="payment-btn card-btn" onclick="selectPayment('card')">
+                        <div class="icon">💳</div>
+                        <span>카드결제</span>
+                    </button>
+                    <button class="payment-btn cash-btn" onclick="selectPayment('cash')">
+                        <div class="icon">💵</div>
+                        <span>현금결제</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="checkout-footer">
+            <button class="back-btn" onclick="goBack()">뒤로 가기</button>
+        </footer>
+    </div>
+
+    <!-- 결제 진행 화면 -->
+    <div class="payment-process" id="payment-process">
+        <div class="process-content">
+            <div class="process-icon">
+                <div class="loading-spinner"></div>
+            </div>
+            <h2 class="process-text">결제가 진행 중입니다...</h2>
+            <p class="process-instruction">잠시만 <br>기다려주세요</p>
+        </div>
+    </div>
+
+    <!-- 결제 완료 화면 -->
+    <div class="payment-complete" id="payment-complete">
+        <div class="complete-content">
+            <div class="complete-icon">✓</div>
+            <h2 class="complete-text">결제가 <br>완료되었습니다</h2>
+            <p class="complete-instruction">이용해 주셔서 <br>감사합니다</p>
+        </div>
+    </div>
+
+    <!-- 별점 화면 -->
+    <div class="rating-container" id="rating-container">
+        <div class="rating-content">
+            <h2 class="rating-title">화면은 보기 <br> 편하셨나요?</h2>
+            <div class="stars-container">
+                <div class="star" data-value="1" onclick="selectRating(1)">★</div>
+                <div class="star" data-value="2" onclick="selectRating(2)">★</div>
+                <div class="star" data-value="3" onclick="selectRating(3)">★</div>
+                <div class="star" data-value="4" onclick="selectRating(4)">★</div>
+                <div class="star" data-value="5" onclick="selectRating(5)">★</div>
+            </div>
+            <button class="submit-rating" id="payment-complete-button" onclick="submitRating()">평가완료</button>
+        </div>
+    </div>
+
+    <!-- 현금 결제 안내 모달 -->
+    <div class="cash-payment-modal" id="cash-payment-modal">
+        <div class="modal-content">
+            <div class="modal-icon">💵</div>
+            <h2 class="modal-title">현금 결제 안내</h2>
+            <p class="modal-text">현금 결제는 카운터에서 진행됩니다.<br>카운터로 와주세요.</p>
+            <div class="order-number">
+                <h3>주문번호</h3>
+                <div class="number">127</div>
+            </div>
+            <button class="modal-button" onclick="completeCashPayment()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let selectedPaymentMethod = '';
+        let selectedOrderType = '';
+        let selectedRating = 0;
+        let usePoints = true;
+        
+        // 페이지 로드 시 장바구니 데이터 불러오기
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartData();
+            displayOrderItems();
+            updatePointsPreview();
+            displayStamps(); // 스탬프 표시 함수 호출
+            
+            // 포인트 적립 체크박스 이벤트
+            document.getElementById('points-checkbox').addEventListener('change', function() {
+                usePoints = this.checked;
+                updatePointsPreview();
+            });
+            
+            // 노인 여부 정보가 없는 경우 기본값으로 true 설정 (간편 메뉴는 노인용이므로)
+            if (localStorage.getItem('isElderly') === null) {
+                localStorage.setItem('isElderly', 'true');
+            }
+        });
+        
+        // 장바구니 데이터 불러오기
+        function loadCartData() {
+            const savedCart = sessionStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        }
+        
+        // 주문 아이템 표시
+        function displayOrderItems() {
+            const orderItemsContainer = document.querySelector('.order-items');
+            const totalAmountElement = document.querySelector('.total-amount');
+            
+            // 주문 아이템 초기화
+            orderItemsContainer.innerHTML = '';
+            
+            // 총 금액 계산
+            let totalAmount = 0;
+            
+            // 장바구니가 비어있지 않은 경우
+            if (cart.length > 0) {
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'order-item';
+                    
+                    itemElement.innerHTML = `
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-quantity">${item.quantity}개</div>
+                        <div class="item-price">${(item.price * item.quantity).toLocaleString()}원</div>
+                    `;
+                    
+                    orderItemsContainer.appendChild(itemElement);
+                    
+                    // 총 금액 업데이트
+                    totalAmount += item.price * item.quantity;
+                });
+            } else {
+                // 장바구니가 비어있는 경우
+                const emptyCartElement = document.createElement('div');
+                emptyCartElement.className = 'empty-cart';
+                emptyCartElement.textContent = '장바구니가 비어있습니다';
+                orderItemsContainer.appendChild(emptyCartElement);
+            }
+            
+            // 총 금액 표시
+            totalAmountElement.textContent = totalAmount.toLocaleString() + '원';
+            
+            // 포인트 적립 예정 업데이트
+            updatePointsPreview();
+        }
+        
+        // 스탬프 표시 함수
+        function displayStamps() {
+            // 원래 기능 유지
+        }
+        
+        // 매장/포장 선택
+        function selectOrderType(type) {
+            selectedOrderType = type;
+            
+            // 선택된 버튼 스타일 변경
+            document.querySelectorAll('.order-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (type === 'for-here') {
+                document.querySelector('.for-here').classList.add('active');
+            } else {
+                document.querySelector('.take-out').classList.add('active');
+            }
+        }
+        
+        // 포인트 적립 미리보기 업데이트
+        function updatePointsPreview() {
+            // 원래 기능 유지
+        }
+        
+        // 결제 방법 선택
+        function selectPayment(method) {
+            // 매장/포장 선택 확인
+            if (!selectedOrderType) {
+                alert('매장 또는 포장을 선택해주세요');
+                return;
+            }
+            
+            selectedPaymentMethod = method;
+            
+            if (method === 'cash') {
+                // 현금 결제 선택 시 안내 모달 표시
+                document.getElementById('cash-payment-modal').style.display = 'flex';
+            } else {
+                // 카드 결제 선택 시 결제 진행 화면 표시
+                document.getElementById('payment-process').style.display = 'flex';
+                
+                // 3초 후 결제 완료 화면 표시
+                setTimeout(function() {
+                    document.getElementById('payment-process').style.display = 'none';
+                    document.getElementById('payment-complete').style.display = 'flex';
+                    
+                    // 2초 후 별점 화면 표시
+                    setTimeout(function() {
+                        document.getElementById('payment-complete').style.display = 'none';
+                        document.getElementById('rating-container').style.display = 'flex';
+                    }, 2000);
+                }, 3000);
+            }
+        }
+        
+        // 현금 결제 확인 버튼 클릭
+        function completeCashPayment() {
+            document.getElementById('cash-payment-modal').style.display = 'none';
+            
+            // 별점 화면 표시
+            document.getElementById('rating-container').style.display = 'flex';
+        }
+        
+        // 별점 선택
+        function selectRating(rating) {
+            selectedRating = rating;
+            
+            // 모든 별점 초기화
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('selected');
+            });
+            
+            // 선택한 별점까지 강조 표시
+            for (let i = 1; i <= rating; i++) {
+                document.querySelector(`.star[data-value="${i}"]`).classList.add('selected');
+            }
+        }
+        
+        // 별점 제출
+        function submitRating() {
+            // 별점 데이터 저장 (필요한 경우 서버로 전송)
+            if (selectedRating > 0) {
+                console.log(`선택한 별점: ${selectedRating}`);
+                console.log(`선택한 주문 타입: ${selectedOrderType}`);
+                
+                // 노인 여부 가져오기
+                const isElderly = localStorage.getItem('isElderly') === 'true';
+                
+                // 세션 스토리지 초기화
+                sessionStorage.removeItem('cart');
+                
+                // 회원가입 페이지로 이동하며 노인 여부 전달
+                window.location.href = `/signup-check?is_elderly=${isElderly}`;
+            } else {
+                alert('별점을 선택해주세요');
+            }
+        }
+        
+        // 뒤로 가기
+        function goBack() {
+            window.location.href = "{{ url_for('menu_simple_new') }}";
+        }
+    </script>
+</body>
+</html>
