@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+.menu-screen {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 헤더 스타일 */
+.menu-header {
+    padding: 8px !important;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(190, 140, 86, 0.2);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.user-welcome {
+    font-size: 1.3rem !important;
+    color: #be8c56a1;
+    margin-bottom: 5px;
+}
+
+#user-name {
+    font-weight: bold;
+}
+
+.tab-navigation {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.tab-btn {
+    padding: 5px 8px;
+    font-size: 0.7rem !important; 
+    border: none;
+    border-radius: 15px;
+    background-color: transparent;
+    color: #be8c56a1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    background-color: rgba(190, 140, 86, 0.1);
+}
+
+.tab-btn.active {
+    background-color: #be8c56a1;
+    color: white;
+    box-shadow: 0 2px 10px rgba(190, 140, 86, 0.3);
+}
+
+/* 메인 콘텐츠 스타일 */
+.menu-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 1rem !important;
+    color: #be8c56a1;
+    margin: 20px 0 15px;
+    font-weight: 700;
+}
+
+/* 추천 메뉴 그리드와 일반 메뉴 그리드 통일 */
+.menu-grid, .recent-orders, .recommended-items {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important; /* 정확히 4열 */
+    gap: 2px !important; /* 간격 최소화 */
+    padding: 2px !important; /* 패딩 최소화 */
+    margin-bottom: 10px;
+}
+
+/* 모든 탭의 메뉴 아이템 통일 */
+.menu-item, 
+#recommend-tab .menu-item,
+#drinks-tab .menu-item,
+#desserts-tab .menu-item {
+    background-color: white !important;
+    border-radius: 4px !important; /* 모서리 둥글기 줄임 */
+    overflow: hidden !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important; /* 그림자 최소화 */
+    transition: all 0.3s ease !important; /* 호버 애니메이션 유지 */
+    min-width: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1/1.5 !important; /* 세로로 긴 비율 */
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 1px !important; /* 패딩 최소화 */
+}
+
+/* 메뉴 이미지 컨테이너 크기 조정 */
+.menu-item-image,
+#recommend-tab .menu-item-image,
+#drinks-tab .menu-item-image,
+#desserts-tab .menu-item-image {
+    height: 60% !important; /* 이미지 영역 비율 */
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 메뉴 이미지 스타일 */
+.menu-item-image img,
+#recommend-tab .menu-item-image img,
+#drinks-tab .menu-item-image img,
+#desserts-tab .menu-item-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* 이미지 비율 유지 */
+    transition: transform 0.5s ease !important; /* 호버 시 확대 효과 */
+}
+
+/* 호버 효과 통일 */
+.menu-item:hover,
+#recommend-tab .menu-item:hover,
+#drinks-tab .menu-item:hover,
+#desserts-tab .menu-item:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.menu-item:hover .menu-item-image img,
+#recommend-tab .menu-item:hover .menu-item-image img,
+#drinks-tab .menu-item:hover .menu-item-image img,
+#desserts-tab .menu-item:hover .menu-item-image img {
+    transform: scale(1.05) !important;  /* 호버 시 이미지 확대 */
+}
+
+/* 메뉴 정보 영역 */
+.menu-item-info,
+#recommend-tab .menu-item-info,
+#drinks-tab .menu-item-info,
+#desserts-tab .menu-item-info {
+    padding: 1px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    flex: 1 !important;
+    font-size: 0.6rem !important; /* 전체 글꼴 크기 축소 */
+}
+
+/* 메뉴 이름 */
+.menu-item-name,
+#recommend-tab .menu-item-name,
+#drinks-tab .menu-item-name,
+#desserts-tab .menu-item-name,
+.menu-item-info h3 {
+    font-size: 0.6rem !important;
+    margin: 1px 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: center !important;
+    max-height: 1.2em !important; /* 높이 제한 */
+    color: #444;
+}
+
+/* 가격 */
+.menu-item-price,
+#recommend-tab .menu-item-price,
+#drinks-tab .menu-item-price,
+#desserts-tab .menu-item-price,
+.price {
+    font-size: 0.6rem !important;
+    margin: 1px 0 !important;
+    text-align: center !important;
+    color: #be8c56a1;
+    font-weight: 700;
+}
+
+/* 담기 버튼 */
+.add-to-cart-btn {
+    padding: 1px 0 !important;
+    font-size: 0.6rem !important;
+    background-color: #be8c56a1;
+    color: white;
+    border: none;
+    margin: 1px 0 !important;
+    border-radius: 2px !important;
+    height: 1.2em !important;
+    line-height: 1 !important;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #a17648a1;
+}
+
+/* 푸터 스타일 */
+.menu-footer {
+    padding: 15px 20px;
+    background-color: white;
+    border-top: 1px solid rgba(190, 140, 86, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    bottom: 0;
+}
+
+.cart-preview {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-info, .cart-total {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.cart-count, .total-price {
+    font-weight: bold;
+    color: #be8c56a1;
+}
+
+.checkout-btn {
+    padding: 5px 15px;
+    font-size: 1rem !important;
+    background-color: #be8c56a1;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.checkout-btn:hover:not(:disabled) {
+    background-color: #a17648a1;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(190, 140, 86, 0.3);
+}
+
+.checkout-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 장바구니 애니메이션 */
+.menu-item-clone {
+    transition: all 0.5s ease-in-out;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* 반응형 */
+@media (max-height: 1080px) {
+    .user-welcome {
+        font-size: 1.5rem;
+    }
+    
+    .tab-btn {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+    }
+    
+    .cart-info, .cart-total {
+        font-size: 1.1rem;
+    }
+    
+    .checkout-btn {
+        padding: 10px 25px;
+        font-size: 1.2rem;
+    }
+}

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyosk 결제</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='checkout.css') }}">
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="checkout-screen">
+                <header class="checkout-header">
+                    <h1 class="title">결제</h1>
+                </header>
+                
+                <main class="checkout-content">
+                    <div class="order-summary">
+                        <h2 class="section-title">주문 내역</h2>
+                        <div class="order-items" id="order-items-container">
+                            <!-- 장바구니 항목들이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                        <div class="order-total">
+                            <div class="total-row">
+                                <span>총 금액</span>
+                                <span id="total-amount">0원</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-options">
+                        <div class="option-section">
+                            <h2 class="section-title">포장 선택</h2>
+                            <div class="option-buttons">
+                                <button class="option-btn active" data-option="takeout">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 5H3C1.89543 5 1 5.89543 1 7V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V7C23 5.89543 22.1046 5 21 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M16 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    포장
+                                </button>
+                                <button class="option-btn" data-option="instore">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 8H19C20.0609 8 21.0783 8.42143 21.8284 9.17157C22.5786 9.92172 23 10.9391 23 12C23 13.0609 22.5786 14.0783 21.8284 14.8284C21.0783 15.5786 20.0609 16 19 16H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M2 8H18V17C18 18.0609 17.5786 19.0783 16.8284 19.8284C16.0783 20.5786 15.0609 21 14 21H6C4.93913 21 3.92172 20.5786 3.17157 19.8284C2.42143 19.0783 2 18.0609 2 17V8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 1V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M10 1V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M14 1V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    매장
+                                </button>
+                            </div>
+                        </div>
+                        <div class="option-section stamp-section">
+                            <h2 class="section-title">스탬프 적립</h2>
+                            <div class="stamp-info">
+                                <div class="stamp-count" id="stamp-count">
+                                    <!-- 스탬프 아이콘들이 여기에 동적으로 추가됩니다 -->
+                                </div>
+                                <p class="stamp-text">
+                                    고객님의 스탬프가 <span id="stamp-number">0</span>개 적립되었습니다.
+                                    <br>10개 적립 시 아메리카노 무료 쿠폰 지급!
+                                </p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="option-section">
+                            <h2 class="section-title">결제 방법</h2>
+                            <div class="payment-options">
+                                <button class="payment-option-btn active" data-payment="card">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>신용카드</span>
+                                </button>
+                                <button class="payment-option-btn" data-payment="kakaopay">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2C6.48 2 2 5.51 2 9.83C2 12.73 3.94 15.27 6.88 16.63V21.03L12 17.75L17.12 21.03V16.63C20.06 15.27 22 12.73 22 9.83C22 5.51 17.52 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>카카오페이</span>
+                                </button>
+                                <button class="payment-option-btn" data-payment="naverpay">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8 10V14L10.5 12L13 14V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <line x1="16" y1="10" x2="16" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>네이버페이</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                
+                <footer class="checkout-footer">
+                    <button id="back-button" class="back-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        이전
+                    </button>
+                    <button id="pay-button" class="pay-btn">
+                        결제<br>하기
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 결제 진행 화면 -->
+    <div class="payment-process" id="payment-process">
+        <div class="process-content">
+            <div class="process-icon">
+                <div class="loading-spinner"></div>
+            </div>
+            <h2 class="process-text">결제가 진행 중입니다...</h2>
+            <p class="process-instruction">잠시만 기다려주세요</p>
+        </div>
+    </div>
+
+    <!-- 결제 완료 화면 -->
+    <div class="payment-complete" id="payment-complete">
+        <div class="complete-content">
+            <div class="complete-icon">✓</div>
+            <h2 class="complete-text">결제가 완료되었습니다</h2>
+            <p class="complete-instruction">이용해 주셔서 감사합니다</p>
+        </div>
+    </div>
+    
+    <!-- 피드백 모달 (평가 화면) -->
+    <div class="feedback-modal" id="feedback-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">주문 만족도 평가</h2>
+            <p class="modal-text">오늘의 주문 경험은 어떠셨나요?</p>
+            <div class="rating-buttons">
+                <button class="rating-btn" data-rating="1">😞</button>
+                <button class="rating-btn" data-rating="2">😕</button>
+                <button class="rating-btn" data-rating="3">😐</button>
+                <button class="rating-btn" data-rating="4">🙂</button>
+                <button class="rating-btn" data-rating="5">😊</button>
+            </div>
+            <button id="close-modal-btn" class="modal-button">완료</button>
+        </div>
+    </div>
+    
+    <script>
+        // 장바구니 데이터 로드
+       // 장바구니 데이터 로드
+        let cart = [];
+        const orderItemsContainer = document.getElementById('order-items-container');
+        const totalAmountElement = document.getElementById('total-amount');
+
+        // 주문 항목 표시
+        function displayOrderItems() {
+            orderItemsContainer.innerHTML = '';
+            let totalAmount = 0;
+            
+            // 장바구니가 비어있지 않은 경우
+            if (cart.length > 0) {
+                cart.forEach(item => {
+                    const orderItem = document.createElement('div');
+                    orderItem.classList.add('order-item');
+                    
+                    // 상품의 총 가격 계산
+                    const itemTotal = item.price * item.quantity;
+                    totalAmount += itemTotal;
+                    
+                    orderItem.innerHTML = `
+                        <div class="item-name">${item.name} <span class="item-quantity">x${item.quantity}</span></div>
+                        <div class="item-price">${itemTotal.toLocaleString()}원</div>
+                    `;
+                    
+                    orderItemsContainer.appendChild(orderItem);
+                });
+            } else {
+                // 장바구니가 비어있는 경우
+                const emptyCartMessage = document.createElement('div');
+                emptyCartMessage.classList.add('empty-cart-message');
+                emptyCartMessage.textContent = '장바구니가 비어있습니다';
+                orderItemsContainer.appendChild(emptyCartMessage);
+            }
+            
+            // 총액 업데이트
+            totalAmountElement.textContent = totalAmount.toLocaleString() + '원';
+        }
+
+        // 장바구니 데이터 불러오기
+        function loadCartData() {
+            const savedCart = sessionStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                console.log('장바구니 데이터 로드됨:', cart);
+            } else {
+                console.log('세션 스토리지에 장바구니 데이터가 없습니다.');
+            }
+        }
+        // 스탬프 표시
+        function displayStamps() {
+            // 실제 구현에서는 서버에서 고객의 스탬프 정보를 가져와야 함
+            // 여기서는 예시로 랜덤한 스탬프 개수 생성
+            const stampCountElement = document.getElementById('stamp-count');
+            const stampNumberElement = document.getElementById('stamp-number');
+            
+            // 현재 가지고 있는 스탬프 수 (실제로는 DB에서 가져옴)
+            const currentStamps = Math.floor(Math.random() * 8) + 1;
+            // 이번 주문으로 추가될 스탬프 수 (음료 한 잔당 1개)
+            const drinkItems = cart.filter(item => 
+                item.name.includes('라떼') || 
+                item.name.includes('아메리카노') || 
+                item.name.includes('카푸치노') ||
+                item.name.includes('티') ||
+                item.name.includes('스무디')
+            );
+            const newStamps = drinkItems.reduce((total, item) => total + item.quantity, 0);
+            
+            // 총 스탬프 수
+            const totalStamps = currentStamps + newStamps;
+            stampNumberElement.textContent = totalStamps;
+            
+            // 스탬프 아이콘 표시
+            stampCountElement.innerHTML = '';
+            
+            for (let i = 0; i < 10; i++) {
+                const stampIcon = document.createElement('div');
+                stampIcon.classList.add('stamp-icon');
+                
+                if (i < totalStamps) {
+                    stampIcon.classList.add('active');
+                    stampIcon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                } else {
+                    stampIcon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                }
+                
+                stampCountElement.appendChild(stampIcon);
+            }
+        }
+        // 결제 처리 함수
+        function processPayment() {
+            // 선택된 결제 방법 확인
+            const selectedPaymentMethod = document.querySelector('.payment-option-btn.active').getAttribute('data-payment');
+            
+            // 선택된 포장 옵션 확인
+            const selectedOption = document.querySelector('.option-btn.active').getAttribute('data-option');
+            
+            // 결제 처리 로직 (실제로는 서버와 통신)
+            console.log('결제 방법:', selectedPaymentMethod);
+            console.log('포장 옵션:', selectedOption);
+            
+            // 결제 진행 화면 표시
+            document.getElementById('payment-process').style.display = 'flex';
+            
+            // 2초 후 결제 완료 화면 표시
+            setTimeout(() => {
+                document.getElementById('payment-process').style.display = 'none';
+                document.getElementById('payment-complete').style.display = 'flex';
+                
+                // 2초 후 피드백 모달 표시
+                setTimeout(() => {
+                    document.getElementById('payment-complete').style.display = 'none';
+                    document.getElementById('feedback-modal').style.display = 'flex';
+                }, 2000);
+            }, 2000);
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            // 장바구니 데이터를 로드하고 주문 내역 표시
+            loadCartData();
+            displayOrderItems();
+            
+            // 포장 옵션 선택
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 현재 그룹의 모든 버튼에서 active 클래스 제거
+                    this.parentElement.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 클릭된 버튼에 active 클래스 추가
+                    this.classList.add('active');
+                });
+            });
+            
+            // 결제 방법 선택
+            const paymentButtons = document.querySelectorAll('.payment-option-btn');
+            paymentButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 모든 결제 버튼에서 active 클래스 제거
+                    paymentButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 클릭된 버튼에 active 클래스 추가
+                    this.classList.add('active');
+                });
+            });
+            
+            // 결제하기 버튼 클릭 시 결제 처리
+            document.getElementById('pay-button').addEventListener('click', processPayment);
+            
+            // 이전 버튼 클릭 시 메뉴 페이지로 돌아가기
+            document.getElementById('back-button').addEventListener('click', function() {
+                window.history.back();
+            });
+            
+            // 피드백 모달 닫기 버튼
+            document.getElementById('close-modal-btn').addEventListener('click', function() {
+                document.getElementById('feedback-modal').style.display = 'none';
+                
+                // 장바구니 비우기
+                sessionStorage.removeItem('cart');
+                
+                // 처음 화면으로 이동
+                window.location.href = '{{ url_for("index") }}';
+            });
+            
+            // 별점 선택 버튼
+            const ratingButtons = document.querySelectorAll('.rating-btn');
+            ratingButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 모든 별점 버튼에서 active 클래스 제거
+                    ratingButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 클릭된 버튼에 active 클래스 추가
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+
+.login-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.user-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e0c4ad, #f2d2a4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-text {
+    font-size: 5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.user-name {
+    font-size: 2.5rem;
+    color: #be8c56a1;
+    margin-bottom: 0.5rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.welcome-message {
+    font-size: 1.8rem;
+    color: #be8c56a1;
+    opacity: 0.9;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+.login-message {
+    margin: 2rem 0;
+}
+
+.login-message p {
+    font-size: 1.6rem;
+    color: #be8c56a1;
+    margin: 0.5rem 0;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.loading-spinner {
+    margin-top: 2rem;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(190, 140, 86, 0.3);
+    border-top: 5px solid #be8c56a1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-height: 1080px) {
+    .user-avatar {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .avatar-text {
+        font-size: 4rem;
+    }
+    
+    .user-name {
+        font-size: 2rem;
+    }
+    
+    .welcome-message {
+        font-size: 1.5rem;
+    }
+    
+    .login-message p {
+        font-size: 1.4rem;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+    }
+}

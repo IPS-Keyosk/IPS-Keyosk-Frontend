@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>얼굴 캡처</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='signup-register.css') }}">
+    <style>
+        /* 회원가입 완료 팝업 스타일 */
+        .registration-complete-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .registration-complete-overlay.show {
+            display: flex;
+        }
+        
+        .registration-complete-popup {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .complete-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+        }
+        
+        .complete-checkmark {
+            width: 45px;
+            height: 45px;
+            stroke: white;
+            stroke-width: 4;
+            fill: none;
+        }
+        
+        .registration-complete-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .registration-complete-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .stamp-reward {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #be8c56;
+        }
+        
+        .registration-complete-button {
+            background-color: #be8c56;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .registration-complete-button:hover {
+            background-color: #a17648;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="kiosk-container">
+        <div class="kiosk-content">
+            <div class="container">
+                <h1>'{{ folder_name }}'님 얼굴을 등록하겠습니다</h1>
+                
+                <div class="camera-container">
+                    <video id="video" autoplay></video>
+                </div>
+                
+                <div class="info-text">
+                    <p>사진 등록 버튼을 누르면 5초 동안 빠르게 다양한 각도에서 자동으로 촬영됩니다.</p>
+                    <p>잠시 기다려 주세요. 촬영된 이미지: <span id="captureCount">0</span>장</p>
+                </div>
+                
+                <div class="buttons">
+                    <button id="captureBtn">사진 등록</button>
+                </div>
+                
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <div class="progress-message" id="progressMessage">모델 학습 중입니다. 잠시만 기다려주세요...</div>
+                    <div class="progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                    <div class="training-stats" id="trainingStats"></div>
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 회원가입 완료 팝업 -->
+    <div class="registration-complete-overlay" id="registration-complete-overlay">
+        <div class="registration-complete-popup">
+            <div class="complete-icon-wrapper">
+                <svg class="complete-checkmark" viewBox="0 0 52 52">
+                    <path d="M14 27 L22 35 L38 16"></path>
+                </svg>
+            </div>
+            <h2 class="registration-complete-title">회원가입이 완료되었습니다!</h2>
+            <p class="registration-complete-message">
+                축하합니다! {{ folder_name }}님의<br>
+                회원가입이 성공적으로 완료되었습니다.
+            </p>
+            <div class="stamp-reward">
+                <p>신규 회원 특전으로 <span class="highlight">스탬프 1개</span>가 적립되었습니다!<br>
+                음료 구매 시 스탬프를 모아보세요.</p>
+            </div>
+            <button class="registration-complete-button" onclick="goToHome()">처음으로 돌아가기</button>
+        </div>
+    </div>
+                        
+    <script>
+        let video;
+        let captureCount = 0;
+        let captureInterval;
+        let isCapturing = false;
+        const folderName = "{{ folder_name }}"; // 서버에서 전달받은 사용자 이름
+        const TOTAL_CAPTURES = 50; // 0.1초에 한 장씩, 5초 동안 총 50장
+        const CAPTURE_INTERVAL = 100; // 캡처 간격을 0.1초(100ms)로 설정
+
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            initCamera();
+            
+            // 버튼 이벤트 리스너 등록
+            document.getElementById('captureBtn').addEventListener('click', startAutoCapture);
+        });
+
+        // 카메라 초기화 함수
+        async function initCamera() {
+            video = document.getElementById('video');
+            try {
+                // 카메라 접근 요청 - 적절한 비율을 위한 설정
+                const constraints = {
+                    video: {
+                        width: { ideal: 1000 },
+                        height: { ideal: 1000 },
+                        facingMode: "user" // 전면 카메라 사용
+                    }
+                };
+                
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                
+                // 비디오 로딩 완료 후 재생
+                video.onloadedmetadata = function() {
+                    video.play();
+                    
+                    // 촬영 시작할 때 잠깐 스캐닝 효과 적용
+                    const cameraContainer = document.querySelector('.camera-container');
+                    cameraContainer.classList.add('scanning');
+                    
+                    setTimeout(() => {
+                        cameraContainer.classList.remove('scanning');
+                    }, 2000);
+                };
+            } catch (err) {
+                console.error('카메라 접근 오류:', err);
+                alert('카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.');
+            }
+        }
+
+        // 자동 캡처 시작
+        function startAutoCapture() {
+            if (isCapturing) return; // 이미 캡처 중이면 중복 실행 방지
+            
+            if (!video || !video.videoWidth) {
+                alert('카메라가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
+                return;
+            }
+            
+            isCapturing = true;
+            captureCount = 0;
+            document.getElementById('captureCount').textContent = captureCount;
+            
+            // 버튼 비활성화 및 텍스트 변경
+            const captureBtn = document.getElementById('captureBtn');
+            captureBtn.disabled = true;
+            captureBtn.textContent = "촬영 중...";
+            captureBtn.style.backgroundColor = "#e0e0e0";
+            
+            // 카메라 컨테이너에 촬영 중 클래스 추가
+            const cameraContainer = document.querySelector('.camera-container');
+            cameraContainer.classList.add('scanning');
+            
+            // 음성 안내 (선택 사항)
+            const speechText = "다양한 각도로 얼굴을 움직여주세요.";
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(speechText);
+                utterance.lang = 'ko-KR';
+                speechSynthesis.speak(utterance);
+            }
+            
+            // 0.1초마다 한 장씩 촬영
+            captureInterval = setInterval(() => {
+                captureImage();
+                
+                // 모든 사진이 촬영됐으면 자동 학습 시작
+                if (captureCount >= TOTAL_CAPTURES) {
+                    clearInterval(captureInterval);
+                    isCapturing = false;
+                    cameraContainer.classList.remove('scanning');
+                    
+                    // 안내 메시지 업데이트
+                    document.querySelector('.info-text p:first-child').textContent = 
+                        "얼굴 등록이 완료되었습니다. 모델 학습을 시작합니다.";
+                    
+                    // 잠시 대기 후 모델 학습 시작
+                    setTimeout(() => {
+                        startTraining();
+                    }, 1000);
+                }
+            }, CAPTURE_INTERVAL); // 0.1초 간격
+        }
+
+        // 이미지 캡처 및 업로드 함수
+        function captureImage() {
+            // 캡처 효과
+            const cameraContainer = document.querySelector('.camera-container');
+            cameraContainer.style.transition = 'all 0.05s';
+            cameraContainer.style.border = '4px solid #c4f0ad';
+            
+            setTimeout(() => {
+                cameraContainer.style.border = '4px solid #be8c56a1';
+            }, 50);
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Base64 이미지 데이터 생성
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // 서버에 이미지 전송
+            uploadImage(imageData);
+            
+            // 카운터 업데이트
+            updateCaptureCount();
+        }
+
+        // 이미지를 서버에 업로드
+        async function uploadImage(imageData) {
+            try {
+                const response = await fetch('/upload_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        folder: folderName  // 서버에서 받은 사용자 이름으로 폴더 지정
+                    })
+                });
+
+                const data = await response.json();
+                console.log(data.message);
+            } catch (err) {
+                console.error('이미지 업로드 오류:', err);
+                alert('이미지 업로드 중 오류가 발생했습니다.');
+            }
+        }
+  
+        // 캡처 카운터 업데이트
+        function updateCaptureCount() {
+            captureCount++;
+            document.getElementById('captureCount').textContent = captureCount;
+        }
+    
+        // 모델 학습 시작
+        async function startTraining() {
+            // 진행 상태 표시
+            document.getElementById('captureBtn').style.display = 'none'; // 버튼 감추기
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('progressBar').style.width = '0%';
+    
+            try {
+                // 학습 시작 요청
+                const response = await fetch('/train_model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        folder: folderName
+                    })
+                });
+    
+                const data = await response.json();
+                console.log(data.message);
+    
+                // 학습 상태 확인 시작
+                checkTrainingStatus();
+            } catch (err) {
+                console.error('모델 학습 시작 오류:', err);
+                alert('모델 학습 시작 중 오류가 발생했습니다.');
+                resetTrainingUI();
+            }
+        }
+    
+        // 학습 상태 확인
+        function checkTrainingStatus() {
+            const statusInterval = setInterval(async function () {
+                try {
+                    const response = await fetch('/training_status', {
+                        method: 'POST'
+                    });
+    
+                    const data = await response.json();
+    
+                    if (data.status === 'completed') {
+                        clearInterval(statusInterval);
+                        // 진행 표시 업데이트
+                        document.getElementById('progressBar').style.width = '100%';
+                        document.getElementById('progressMessage').textContent = 
+                            `모델 학습이 완료되었습니다! 정확도: ${(data.accuracy * 100).toFixed(2)}%`;
+                        document.getElementById('trainingStats').textContent = '';
+                        trainingCompleted();
+                    } 
+                    else if (data.status === 'in_progress') {
+                        // 진행 상태 업데이트
+                        const progressPercent = data.progress;
+                        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+                        document.getElementById('progressMessage').textContent = 
+                            `모델 학습 중... (${data.current_epoch}/${data.total_epochs} 에포크, ${progressPercent}% 완료)`;
+                        
+                        // 학습 통계 업데이트 (있는 경우)
+                        if (data.current_accuracy) {
+                            document.getElementById('trainingStats').textContent = 
+                                `현재 정확도: ${(data.current_accuracy * 100).toFixed(2)}%`;
+                        }
+                    }
+                    else if (data.status === 'error') {
+                        clearInterval(statusInterval);
+                        document.getElementById('progressMessage').textContent = 
+                            `오류가 발생했습니다: ${data.error}`;
+                        document.getElementById('trainingStats').textContent = '';
+                        document.getElementById('progressBar').style.width = '0%';
+                        resetTrainingUI();
+                    }
+                } catch (err) {
+                    console.error('학습 상태 확인 오류:', err);
+                    clearInterval(statusInterval);
+                    alert('학습 상태 확인 중 오류가 발생했습니다.');
+                    resetTrainingUI();
+                }
+            }, 1000); // 1초마다 확인
+        }
+    
+        // 학습 완료 처리
+        function trainingCompleted() {
+            document.querySelector('.loader').style.display = 'none';
+    
+            // 확인 버튼 추가
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = '확인';
+            confirmBtn.style.marginTop = '15px';
+            confirmBtn.addEventListener('click', confirmTraining);
+    
+            document.getElementById('progressContainer').appendChild(confirmBtn);
+        }
+    
+        // 학습 확인 및 다음 페이지로 이동
+        async function confirmTraining() {
+            // 기존의 페이지 이동 대신 팝업 표시
+            showRegistrationCompletePopup();
+        }
+        
+        // 회원가입 완료 팝업 표시
+        function showRegistrationCompletePopup() {
+            document.getElementById('registration-complete-overlay').classList.add('show');
+        }
+        
+        // 처음 화면으로 이동
+        function goToHome() {
+            window.location.href = '/';  // 또는 '{{ url_for("index") }}'
+        }
+    
+        // 학습 UI 초기화
+        function resetTrainingUI() {
+            document.getElementById('captureBtn').style.display = 'block';
+            document.getElementById('captureBtn').disabled = false;
+            document.getElementById('captureBtn').textContent = "사진 등록";
+            document.getElementById('captureBtn').style.backgroundColor = "#be8c56a1";
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

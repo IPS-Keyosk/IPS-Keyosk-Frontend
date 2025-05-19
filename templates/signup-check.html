@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyosk 회원가입 여부</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='signup-check.css') }}">
+</head>
+<body>
+<div class="kiosk-container">
+<div class="kiosk-content">
+<div class="signup-check-screen">
+<div class="title">
+<div class="message-container">
+<p class="message">회원가입을<br>하시겠습니까?</p>
+</div>
+<div class="button-container">
+<button id="no-button" class="btn secondary-btn">아니오</button>
+<button id="yes-button" class="btn primary-btn">예</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+// URL에서 노인 여부 파라미터 가져오기
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// 페이지 로드 시 노인 여부 파라미터 확인
+document.addEventListener('DOMContentLoaded', function() {
+    // URL에서 노인 여부 파라미터 가져오기
+    const isElderlyParam = getUrlParameter('is_elderly');
+    
+    // 파라미터가 있으면 localStorage에 저장
+    if (isElderlyParam) {
+        localStorage.setItem('isElderly', isElderlyParam === 'true');
+    }
+});
+
+// 예 버튼 클릭 시 회원가입 페이지로 이동하며 노인 여부 전달
+document.getElementById('yes-button').addEventListener('click', function() {
+    // localStorage에서 노인 여부 가져오기
+    const isElderly = localStorage.getItem('isElderly') === 'true';
+    
+    // 노인 여부를 URL 파라미터로 전달
+    window.location.href = `/signup?is_elderly=${isElderly}`;
+});
+
+// 아니오 버튼 클릭 시 처음 화면으로 이동
+document.getElementById('no-button').addEventListener('click', function() {
+    window.location.href = '{{ url_for("index") }}';
+});
+</script>
+</body>
+</html>
